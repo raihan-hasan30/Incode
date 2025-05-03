@@ -1,21 +1,43 @@
 import React from "react"
 import TypingArea from "./typing-area"
 
-function LessonsBody() {
+function LessonsBody({ lesson, setActiveIndex }) {
   return (
     <div>
       <div>
         <h1 className="text-center text-4xl text-white font-bold">
-          LIST RUNNING CONTAINER
+          {lesson.name}
         </h1>
-        <h3 className="text-zinc-400 mt-4">
-          DISPLAYS CONTAINER ID,IMAGE NAME ,STATUS AND OTHER DETAILS OF RUNNING
-          CONTAINER
-        </h3>
-        <TypingArea command={"heloo"} nextCommand={() => {}} isReady={true} />
-        <div className="flex justify-between">
-          <button>Previous</button>
-          <button>Next</button>
+        <h3 className="text-zinc-400 mt-4">{lesson.summery}</h3>
+        <TypingArea
+          command={lesson.command}
+          nextCommand={() => {
+            setActiveIndex(prev => prev + 1)
+          }}
+          isReady={true}
+        />
+
+        <div className="flex justify-between text-zinc-500">
+          <button
+            onClick={() => {
+              setActiveIndex(prev => {
+                if (prev > 0) {
+                  return prev - 1
+                } else {
+                  return 0
+                }
+              })
+            }}
+          >
+            Previous
+          </button>
+          <button
+            onClick={() => {
+              setActiveIndex(prev => prev + 1)
+            }}
+          >
+            Next
+          </button>
         </div>
       </div>
     </div>
