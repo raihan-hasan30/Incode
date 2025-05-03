@@ -4,21 +4,22 @@ import QuestListing from "./pages/quest-listing"
 import Navbar from "./components/navbar"
 import AllParctices from "./pages/parctices"
 import Login from "./pages/login"
+import RootLayout from "./layout"
+import CreateQuest from "./pages/admin-dashboard/create-quest"
 
 function App() {
   return (
-    <>
-      <div className="p-4">
-        <Navbar />
-
-        <Routes>
+    <Routes>
+      <Route element={<RootLayout />}>
+        <Route element={<Navbar />}>
           <Route path="/" element={<Home />} />
           <Route path="/quest-list" element={<QuestListing />} />
-          <Route path="/practices" element={<AllParctices />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
-      </div>
-    </>
+          <Route path="/practice/:questId" element={<AllParctices />} />
+        </Route>
+        <Route path="/admin/create-quest" element={<CreateQuest />} />
+        <Route path="/login" element={<Login />} />
+      </Route>
+    </Routes>
   )
 }
 

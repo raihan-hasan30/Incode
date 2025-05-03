@@ -8,3 +8,8 @@ body {
   font-family: "Fira Code", monospace;
   font-optical-sizing: auto;
 }
+
+::selection{
+  background-color: #f2ba02a1;
+  color: black;
+}

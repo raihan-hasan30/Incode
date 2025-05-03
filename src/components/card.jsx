@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from "react-router"
 
 function Card({ quest }) {
   return (
@@ -22,14 +23,14 @@ function Card({ quest }) {
         <span>{quest.challanges}</span>
       </div>
       <div className="flex justify-between mt-8">
-        <button className="flex items-center text-gray-400 hover:text-white text-sm">
+        <Link to={`/practice/${quest.id}`} className="flex items-center text-gray-400 hover:text-white text-sm">
           <img
             src="/link.svg"
             alt="link"
             className="w-4 h-4 text-yellow-400 mr-2"
           />
           <span className="mr-1"></span> Practice
-        </button>
+        </Link>
 
         <button className="flex items-center text-gray-400 hover:text-white text-sm">
           <img

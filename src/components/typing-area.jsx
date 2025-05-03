@@ -49,7 +49,7 @@ function TypingArea({ command, nextCommand, isReady }) {
   }
 
   return (
-    <div className="min-h-96 flex items-center justify-center relative">
+    <div className="min-h-96 flex items-center justify-center relative ">
       <h2 className="text-2xl font-bold">{renderCharacters()}</h2>
       {typedText.length >= command.length && (
         <button

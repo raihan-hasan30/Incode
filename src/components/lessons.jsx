@@ -1,31 +1,43 @@
-import React from "react"
+import React from "react";
 
-function Lessons() {
-  const allLessons = [
-    {
-      name: "array-join"
-    },
-    {
-      name: "array-slice"
-    },
-    {
-      name: "array-reduce"
-    },
-    {
-      name: "array-sum"
-    }
-  ]
+function Lessons({ lessons = [], activeIndex = 3 }) {
+  function LessonItem({ lesson, index }) {
+    return (
+      <li
+        key={lesson.name}
+        className={`transition-all ease-in-out hover:text-zinc-400 cursor-pointer overflow-ellipsis line-clamp-1 ${
+          index == activeIndex && "text-amber-400 font-medium"
+        }`}
+      >
+        <span>{">"}</span> {lesson.name}
+      </li>
+    );
+  }
+
+  function EmptyLesson() {
+    return (
+      <div className="max-h-72 h-72 bg-zinc-900 grid place-items-center rounded-md">
+        Lesson Seems Empty
+      </div>
+    );
+  }
+
   return (
     <div>
-      <h1 className="text-2xl mb-4">ALL the lessons</h1>
-      {allLessons.map(lesson => (
-        <ul key={lesson.name} className="flex gap-2 text-lg">
-          <span>{">"}</span>
-          <li className="text-zinc-400">{lesson.name}</li>
-        </ul>
-      ))}
+      <h1 className="text-xl mb-4 font-bold text-zinc-300 uppercase">
+        ALL the lessons
+      </h1>
+      <ul className="text-sm space-y-2 text-zinc-600">
+        {lessons.length ? (
+          lessons.map((lesson, index) => (
+            <LessonItem lesson={lesson} index={index} />
+          ))
+        ) : (
+          <EmptyLesson />
+        )}
+      </ul>
     </div>
-  )
+  );
 }
 
-export default Lessons
+export default Lessons;
