@@ -1,7 +1,26 @@
 import React, { useState, useEffect } from "react"
 
-function TypingArea({ command, nextCommand, isReady }) {
-  const [typedText, setTypedText] = useState("")
+function TypingArea({
+  command,
+  nextCommand,
+  isReady,
+  lessonHistory,
+  setLessonHistory,
+  id
+}) {
+  const [typedText, setTypedText] = useState(lessonHistory[id] || "")
+
+  useEffect(() => {
+    if (typedText !== "") {
+      console.log(typedText, id, lessonHistory)
+      setLessonHistory(prev => {
+        return {
+          ...prev,
+          [id]: typedText
+        }
+      })
+    }
+  }, [typedText])
 
   useEffect(() => {
     if (!isReady) return

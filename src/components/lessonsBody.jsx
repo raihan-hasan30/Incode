@@ -1,7 +1,12 @@
 import React from "react"
 import TypingArea from "./typing-area"
 
-function LessonsBody({ lesson, setActiveIndex }) {
+function LessonsBody({
+  lesson,
+  setActiveIndex,
+  lessonHistory,
+  setLessonHistory
+}) {
   return (
     <div>
       <div>
@@ -10,6 +15,10 @@ function LessonsBody({ lesson, setActiveIndex }) {
         </h1>
         <h3 className="text-zinc-400 mt-4">{lesson.summery}</h3>
         <TypingArea
+          key={lesson.id}
+          id={lesson.id}
+          lessonHistory={lessonHistory}
+          setLessonHistory={setLessonHistory}
           command={lesson.command}
           nextCommand={() => {
             setActiveIndex(prev => prev + 1)
