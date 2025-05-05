@@ -4,107 +4,90 @@ import LessonsBody from "../components/lessonsBody"
 import LessonsSummary from "../components/lessonsSummary"
 
 const dummyQuest = {
-  id: "docker-101",
-  questName: "Docker",
-  challanges: 32,
-  lessonCount: 10,
-  logo: "https://www.svgrepo.com/show/349342/docker.svg",
+  id: "react-101",
+  questName: "React Basics",
+  challanges: 20,
+  lessonsCount: 12,
+  logo: "https://www.svgrepo.com/show/452092/react.svg",
   lessons: [
     {
-      id: "docker-101/docker-build",
-      name: "Build Docker Image",
-      summery: "Builds an image from a Dockerfile in the current directory.",
-      command: "docker build"
+      id: "react-101/create-component",
+      name: "Create a React Component",
+      summery: "Defines a reusable UI block using a function.",
+      command: "function MyComponent() { return <div>Hello</div>; }"
     },
     {
-      id: "docker-101/docker-run",
-      name: "Run Container",
-      summery: "Runs a container from a Docker image.",
-      command: "docker run"
+      id: "react-101/export-component",
+      name: "Export a Component",
+      summery: "Makes a component available for import in other files.",
+      command: "export default MyComponent;"
     },
     {
-      id: "docker-101/docker-ps",
-      name: "List Running Containers",
-      summery: "Lists all currently running containers.",
-      command: "docker ps"
+      id: "react-101/import-component",
+      name: "Import a Component",
+      summery: "Loads a component into another file for usage.",
+      command: "import MyComponent from './MyComponent';"
     },
     {
-      id: "docker-101/docker-ps-a",
-      name: "List All Containers",
-      summery: "Shows all containers, including stopped ones.",
-      command: "docker ps -a"
+      id: "react-101/props-basic",
+      name: "Pass Props to Component",
+      summery: "Sends data to a child component via attributes.",
+      command: "<Greeting name='John' />"
     },
     {
-      id: "docker-101/docker-images",
-      name: "List Docker Images",
-      summery: "Displays all locally stored Docker images.",
-      command: "docker images"
+      id: "react-101/props-object",
+      name: "Pass Props as Object",
+      summery: "Passes props as a single object using spread syntax.",
+      command: "<Greeting {...user} />"
     },
     {
-      id: "docker-101/docker-rm",
-      name: "Remove Container",
-      summery: "Deletes one or more containers.",
-      command: "docker rm"
+      id: "react-101/props-function",
+      name: "Pass Function as Prop",
+      summery: "Sends a callback function to a child component.",
+      command: "<Button onClick={handleClick} />"
     },
     {
-      id: "docker-101/docker-rmi",
-      name: "Remove Image",
-      summery: "Deletes one or more Docker images.",
-      command: "docker rmi"
+      id: "react-101/props-children",
+      name: "Using Children Prop",
+      summery: "Passes JSX as nested children inside a component.",
+      command: "<Card><p>Hello</p></Card>"
     },
     {
-      id: "docker-101/docker-stop",
-      name: "Stop Container",
-      summery: "Stops a running container.",
-      command: "docker stop"
+      id: "react-101/use-props",
+      name: "Access Props in Component",
+      summery: "Reads props in the component for rendering dynamic data.",
+      command: "function Greeting({ name }) { return <p>{name}</p>; }"
     },
     {
-      id: "docker-101/docker-start",
-      name: "Start Container",
-      summery: "Starts a previously stopped container.",
-      command: "docker start"
+      id: "react-101/useState-import",
+      name: "Import useState Hook",
+      summery: "Imports the useState hook from React to use local state.",
+      command: "import { useState } from 'react';"
     },
     {
-      id: "docker-101/docker-exec",
-      name: "Execute Inside Container",
-      summery: "Runs a command inside a running container.",
-      command: "docker exec"
+      id: "react-101/useState-initial",
+      name: "Declare State with useState",
+      summery: "Creates a state variable and its setter.",
+      command: "const [count, setCount] = useState(0);"
     },
     {
-      id: "docker-101/docker-logs",
-      name: "View Container Logs",
-      summery: "Shows logs from a running or stopped container.",
-      command: "docker logs"
+      id: "react-101/setState-update",
+      name: "Update State with setState",
+      summery: "Changes the state value and re-renders the component.",
+      command: "setCount(count + 1);"
     },
     {
-      id: "docker-101/docker-pull",
-      name: "Pull Docker Image",
-      summery: "Downloads an image from Docker Hub.",
-      command: "docker pull"
-    },
-    {
-      id: "docker-101/docker-compose-up",
-      name: "Start Multi-Container App",
-      summery: "Starts services defined in docker-compose.yml.",
-      command: "docker-compose up"
-    },
-    {
-      id: "docker-101/docker-compose-down",
-      name: "Stop Multi-Container App",
-      summery: "Stops and removes services and networks.",
-      command: "docker-compose down"
-    },
-    {
-      id: "docker-101/docker-inspect",
-      name: "Inspect Container",
-      summery: "Returns detailed info on container or image.",
-      command: "docker inspect"
+      id: "react-101/state-in-jsx",
+      name: "Render State in JSX",
+      summery: "Displays a state variable inside JSX.",
+      command: "<p>Count: {count}</p>"
     }
   ]
 }
 
 function AllParctices() {
-  const [activeIndex, setActiveIndex] = useState(1)
+  const [lessonHistory, setLessonHistory] = useState({})
+  const [activeIndex, setActiveIndex] = useState(5)
   return (
     <>
       <div className="flex justify-between py-8 gap-8">
@@ -112,6 +95,8 @@ function AllParctices() {
         <LessonsBody
           lesson={dummyQuest.lessons[activeIndex]}
           setActiveIndex={setActiveIndex}
+          lessonHistory={lessonHistory}
+          setLessonHistory={setLessonHistory}
         />
         <LessonsSummary />
       </div>
