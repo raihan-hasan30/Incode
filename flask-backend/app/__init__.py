@@ -1,37 +1,53 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_jwt_extended import JWTManager
-from flask_bcrypt import Bcrypt
-from dotenv import load_dotenv
 import os
+from flask import Flask, request, redirect, render_template
+from flask_cors import CORS
+from flask_login import LoginManager
+from flask_jwt_extended import JWTManager
+from .models import db, User
+from .api.user_routes import user_routes
+from .api.auth_routes import auth_routes
+from .config import Config
 
-db = SQLAlchemy()
+# Correct the template folder path to resolve properly
+template_dir = os.path.join(os.path.dirname(__file__), 'templates')
+app = Flask(__name__, template_folder=template_dir)
+
+# Setup login manager
+login = LoginManager(app)
+login.login_view = 'auth.unauthorized'
+
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
+# Config
+app.config.from_object(Config)
+db.init_app(app)
+
+# Enable CORS with cookies
+CORS(app, supports_credentials=True)
+
+# Initialize JWT Manager
 jwt = JWTManager()
-bcrypt = Bcrypt()
+jwt.init_app(app)
 
-def create_app():
-    load_dotenv()
+# Register blueprints
+app.register_blueprint(user_routes, url_prefix='/api/users')
+app.register_blueprint(auth_routes, url_prefix='/api/auth')
 
-    app = Flask(__name__)
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-    app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+@app.before_request
+def https_redirect():
+    if os.environ.get('FLASK_ENV') == 'production':
+        if request.headers.get('X-Forwarded-Proto') == 'http':
+            url = request.url.replace('http://', 'https://', 1)
+            return redirect(url, code=301)
 
-    # Initialize extensions
-    db.init_app(app)
-    jwt.init_app(app)
-    bcrypt.init_app(app)
 
-    from app.routes.auth import auth_bp
-    app.register_blueprint(auth_bp, url_prefix='/api/auth')
+@app.route('/')
+def react_root():
+    return 
 
-    with app.app_context():
-        from app.models import user, quest, lesson, report
-        db.create_all()
-
-    @app.route('/api/ping')
-    def ping():
-        return {"message": "Flask is working!"}, 200
-
-    return app
+# Update the 404 error handler to render the index.html template
+@app.errorhandler(404)
+def not_found(e):
+    return render_template('index.html')

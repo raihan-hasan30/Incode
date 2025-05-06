@@ -1,15 +1,36 @@
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import relationship
-import uuid
+from .db import db, environment, SCHEMA, add_prefix_for_prod
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
-db = SQLAlchemy()
+class User(db.Model, UserMixin):
+    __tablename__ = 'users'
 
-class User(db.Model):
-    id = db.Column(db.String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    first_name = db.Column(db.String(64), nullable=False)
-    last_name = db.Column(db.String(64), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    profile_picture = db.Column(db.String(256))
-    password = db.Column(db.String(128), nullable=False)
+    if environment == "production":
+        __table_args__ = {'schema': SCHEMA}
 
-    reports = relationship("Report", back_populates="user")
+    id = db.Column(db.Integer, primary_key=True)
+    firstName = db.Column(db.String(40), nullable=False)
+    lastName = db.Column(db.String(40), nullable=False)
+    profileImage = db.Column(db.String(255), nullable=True)
+    username = db.Column(db.String(40), nullable=False, unique=True)
+    email = db.Column(db.String(255), nullable=False, unique=True)
+    hashed_password = db.Column(db.String(255), nullable=False)
+
+    
+    @property
+    def password(self):
+        return self.hashed_password
+
+    @password.setter
+    def password(self, password):
+        self.hashed_password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email
+        }
