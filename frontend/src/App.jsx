@@ -1,11 +1,12 @@
-import { Route, Routes } from "react-router"
-import Home from "./pages/home"
-import QuestListing from "./pages/quest-listing"
-import Navbar from "./components/navbar"
-import AllParctices from "./pages/parctices"
-import Login from "./pages/login"
-import RootLayout from "./layout"
-import CreateQuest from "./pages/admin-dashboard/create-quest"
+import { Route, Routes } from "react-router";
+import Navbar from "./components/navbar";
+import RootLayout from "./layout";
+import CreateQuest from "./pages/admin-dashboard/create-quest";
+import Home from "./pages/home";
+import Login from "./pages/login";
+import AllParctices from "./pages/parctices";
+import QuestListing from "./pages/quest-listing";
+import Register from "./pages/register";
 
 function App() {
   return (
@@ -18,9 +19,10 @@ function App() {
         </Route>
         <Route path="/admin/create-quest" element={<CreateQuest />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Route>
     </Routes>
-  )
+  );
 }
 
-export default App
+export default App;
