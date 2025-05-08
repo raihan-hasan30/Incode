@@ -1,8 +1,52 @@
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
+import { setAuth } from "../../redux/auth/authSlice";
+import loginAPI from "../../repository/login-api";
 
 function LoginForm() {
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(data.email)) {
+      setLoading(false);
+      alert("Please enter a valid email address");
+      return;
+    }
+
+    if (data.password.trim() === "") {
+      setLoading(false);
+      alert("Password cannot be empty");
+      return;
+    }
+
+    const params = {
+      email: data.email,
+      password: data.password,
+    };
+
+    loginAPI(params)
+      .then((respose) => {
+        setLoading(false);
+        dispatch(setAuth(respose.user));
+        navigate("/");
+      })
+      .catch((err) => {
+        setLoading(false);
+        alert(err.message);
+      });
+  }
+
   return (
-    <form autoComplete="off" className="my-6">
+    <form autoComplete="off" className="my-6" onSubmit={handleSubmit}>
       <div className="flex flex-col items-center space-y-4">
         <input
           className="w-full bg-zinc-800 text-gray-300 p-3 rounded outline-none border-nonetransition-all focus:ring-2 focus:ring-yellow-500"

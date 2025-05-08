@@ -11,5 +11,5 @@ class Config:
     # so the connection uri must be updated here (for production)
     # SQLALCHEMY_DATABASE_URI = os.environ.get(
     #     'DATABASE_URL').replace('postgres://', 'postgresql://')
-    SQLALCHEMY_DATABASE_URI = 'sqlite:////Users/sadh/Desktop/Incode/flask-backend/instance/data.db'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///data.db'
     SQLALCHEMY_ECHO = True
