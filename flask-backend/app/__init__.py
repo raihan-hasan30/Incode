@@ -6,26 +6,26 @@ from flask_jwt_extended import JWTManager
 from .models import db, User
 from .api.user_routes import user_routes
 from .api.auth_routes import auth_routes
+from .api.quest_routes import quest_router
 from .config import Config
 
 # Correct the template folder path to resolve properly
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 app = Flask(__name__, template_folder=template_dir)
 
-# Setup login manager
-login = LoginManager(app)
-login.login_view = 'auth.unauthorized'
+app.config['JWT_TOKEN_LOCATION'] = ['cookies']
+app.config['JWT_COOKIE_SECURE'] = True  # set to True in production (requires HTTPS)
+app.config['JWT_ACCESS_COOKIE_PATH'] = '/'
+app.config['JWT_COOKIE_CSRF_PROTECT'] = True
 
-@login.user_loader
-def load_user(id):
-    return User.query.get(int(id))
 
 # Config
 app.config.from_object(Config)
 db.init_app(app)
 
 # Enable CORS with cookies
-CORS(app, supports_credentials=True)
+# Enable CORS with cookies and specify the allowed origin
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
 
 # Initialize JWT Manager
 jwt = JWTManager()
@@ -34,6 +34,7 @@ jwt.init_app(app)
 # Register blueprints
 app.register_blueprint(user_routes, url_prefix='/api/users')
 app.register_blueprint(auth_routes, url_prefix='/api/auth')
+app.register_blueprint(quest_router, url_prefix='/api/quest')
 
 @app.before_request
 def https_redirect():
@@ -51,3 +52,6 @@ def react_root():
 @app.errorhandler(404)
 def not_found(e):
     return render_template('index.html')
+
+
+app.run(debug=True)

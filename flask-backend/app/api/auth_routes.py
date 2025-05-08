@@ -1,80 +1,88 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from app.models import User, db
-from app.forms import LoginForm, SignUpForm
-from flask_login import current_user, login_user, logout_user
 import traceback
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, set_access_cookies, unset_jwt_cookies
+from werkzeug.security import generate_password_hash, check_password_hash
 
 auth_routes = Blueprint('auth', __name__)
-
-@auth_routes.route('/')
-def authenticate():
-    """Authenticates a user."""
-    if current_user.is_authenticated:
-        return current_user.to_dict()
-    return {'errors': {'message': 'Unauthorized'}}, 401
 
 @auth_routes.route('/login', methods=['POST'])
 def login():
     """Logs a user in"""
     try:
-        form = LoginForm()
+        data = request.get_json();
 
-        if form.validate_on_submit():
-            user = User.query.filter(User.email == form.data['email']).first()
-            if not user:
-                return {"errors": ["Invalid credentials."]}, 401
+        # @todo : form Validation
+        email = data.get('email')
+        password = data.get('password')
 
-            login_user(user)
-            access_token = create_access_token(identity=user.id)
-            return {"access_token": access_token, "user": user.to_dict()}
+        user = User.query.filter(User.email == email).first()
+        if not user or not check_password_hash(user.password, password):
+            return {"errors": ["Invalid credentials."]}, 401
 
-        return {"errors": form.errors}, 401
+        access_token = create_access_token(identity=user.email)
+        response = jsonify({"login" : True, "user" : user.to_dict()})
+        set_access_cookies(response, access_token)
+
+        return response
 
     except Exception as e:
         return {"errors": ["Server error. Please try again."]}, 500
+
+@auth_routes.route("/register", methods=["POST"])
+def register():
+    try:
+        data = request.get_json()
+
+        # @data validation needed
+        email = data.get('email')
+        password = data.get('password')
+        firstName = data.get('firstName')
+        lastName = data.get('lastName')
+
+        # Check if user exists with same email
+        user = User.query.filter(User.email == email).first()
+        # If user exists, return error
+        if user:
+            return {"errors": ["User with this email already exists."]}, 400
+        
+        # Create new user
+        new_user = User(
+            email=email,
+            password=password,
+            firstName=firstName,
+            lastName=lastName
+        )
+        db.session.add(new_user)
+        db.session.commit()
+
+        # Create access token
+        access_token = create_access_token(identity=new_user.email)
+        response = jsonify({
+            "register": True, 
+            "user": new_user.to_dict()
+        })
+        set_access_cookies(response, access_token)
+        return response
+    
+    except KeyError as e:
+        print("KeyError in register: ", e)
+        return {"errors": [str(e)]}, 400
+    
+    except TypeError as e:
+        print("TypeError in register: ", e)
+        return {"errors": [str(e)]}, 400
+    
+    except ValueError as e:
+        print("ValueError in register: ", e)
+        return {"errors": [str(e)]}, 400
+
+    except Exception as e:
+        print("Error in register: ", e)
+        return {"errors": [str(e)]}, 500
+
 
 @auth_routes.route('/logout', methods=['POST'])
 def logout():
     """Logs a user out"""
-    logout_user()
     return {'message': 'User logged out'}
-
-@auth_routes.route('/signup', methods=['POST'])
-def sign_up():
-    """Creates a new user and logs them in"""
-    try:
-        form = SignUpForm()
-
-        if form.validate_on_submit():
-            user = User(
-                firstName=form.data['firstName'],
-                lastName=form.data['lastName'],
-                profileImage=form.data['profileImage'],
-                username=form.data['username'],
-                email=form.data['email'],
-                password=form.data['password']
-            )
-            db.session.add(user)
-            db.session.commit()
-            login_user(user)
-            access_token = create_access_token(identity=user.id)
-            return {"access_token": access_token, "user": user.to_dict()}
-
-        return {"errors": form.errors}, 401
-
-    except Exception as e:
-        return {"errors": ["Server error. Please try again."]}, 500
-
-@auth_routes.route('/unauthorized')
-def unauthorized():
-    """Returns unauthorized response for unauthenticated access"""
-    return {'errors': {'message': 'Unauthorized'}}, 401
-
-@auth_routes.route('/protected', methods=['GET'])
-@jwt_required()
-def protected():
-    """Example protected route"""
-    current_user_id = get_jwt_identity()
-    user = User.query.get(current_user_id)
-    return {"user": user.to_dict()}

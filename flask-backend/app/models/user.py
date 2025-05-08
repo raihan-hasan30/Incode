@@ -12,9 +12,9 @@ class User(db.Model, UserMixin):
     firstName = db.Column(db.String(40), nullable=False)
     lastName = db.Column(db.String(40), nullable=False)
     profileImage = db.Column(db.String(255), nullable=True)
-    username = db.Column(db.String(40), nullable=False, unique=True)
     email = db.Column(db.String(255), nullable=False, unique=True)
     hashed_password = db.Column(db.String(255), nullable=False)
+    role = db.Column(db.String(20), nullable=False, default='user')
 
     
     @property
@@ -31,6 +31,8 @@ class User(db.Model, UserMixin):
     def to_dict(self):
         return {
             'id': self.id,
-            'username': self.username,
-            'email': self.email
+            'firstName': self.firstName,
+            'lastName': self.lastName,
+            'email': self.email,
+            'profileImage': self.profileImage
         }
