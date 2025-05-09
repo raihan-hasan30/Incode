@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, send_from_directory
 from flask_cors import CORS
 from flask_login import LoginManager
 from flask_jwt_extended import JWTManager
@@ -23,9 +23,8 @@ app.config['JWT_COOKIE_CSRF_PROTECT'] = True
 app.config.from_object(Config)
 db.init_app(app)
 
-# Enable CORS with cookies
-# Enable CORS with cookies and specify the allowed origin
-CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
+# Enable CORS with cookies and allow all origins
+CORS(app, supports_credentials=True)
 
 # Initialize JWT Manager
 jwt = JWTManager()
@@ -52,6 +51,12 @@ def react_root():
 @app.errorhandler(404)
 def not_found(e):
     return render_template('index.html')
+
+
+@app.route('/api/quest/logo/<filename>')
+def serve_quest_logo(filename):
+    static_dir = os.path.join(os.path.dirname(__file__), 'static', 'quest_logos')
+    return send_from_directory(static_dir, filename)
 
 
 app.run(debug=True)

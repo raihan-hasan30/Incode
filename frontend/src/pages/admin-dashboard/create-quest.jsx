@@ -1,6 +1,4 @@
 import { useRef, useState } from "react";
-import AddLessonForm from "../../components/admin/create-quest/add-lesson-form";
-import LessonList from "../../components/admin/create-quest/lesson-list";
 import QuestForm from "../../components/admin/create-quest/quest-form";
 
 export default function CreateQuest() {
@@ -107,31 +105,6 @@ export default function CreateQuest() {
           fileInputRef={fileInputRef}
           togglePublish={togglePublish}
         />
-
-        {/* Lessons Section */}
-        <div className=" p-6 rounded-lg shadow-lg">
-          <h2 className="text-xl font-semibold mb-4">Lessons</h2>
-
-          {/* List of added lessons */}
-          <LessonList lessons={quest.lessons} onEdit={editLesson} onDelete={deleteLesson} />
-
-          {/* Add/Edit lesson form */}
-          <AddLessonForm
-            addLesson={addLesson}
-            editingLesson={editingLessonIndex !== null ? quest.lessons[editingLessonIndex] : null}
-            setEditingLessonIndex={setEditingLessonIndex}
-          />
-        </div>
-
-        {/* Submit Button */}
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            className="bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
-          >
-            Save Quest
-          </button>
-        </div>
       </div>
     </div>
   );

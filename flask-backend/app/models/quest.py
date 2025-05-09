@@ -23,12 +23,15 @@ class Quest(db.Model):
         """Dynamically calculates the number of lessons."""
         return len(self.lessons)
 
-    def to_dict(self):
-        return {
+    def to_dict(self, include_lessons=False):
+        data = {
             'id': self.id,
             'questName': self.questName,
             'challenges': self.challenges,
-            'lessonsCount': self.lessons_count,  # Dynamically calculated
-            'logo': self.logo,
-            'lessons': [lesson.to_dict() for lesson in self.lessons]
+            'lessonsCount': self.lessons_count,
+            'logo': self.logo,  # URL will be added in the route
+            'published': self.published
         }
+        if include_lessons:
+            data['lessons'] = [lesson.to_dict() for lesson in self.lessons]
+        return data

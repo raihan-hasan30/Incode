@@ -22,7 +22,7 @@ def login():
 
         access_token = create_access_token(identity=user.email)
         response = jsonify({"login" : True, "user" : user.to_dict()})
-        set_access_cookies(response, access_token)
+        set_access_cookies(response, access_token, max_age=3600, path="/", samesite="None", secure=True)
 
         return response
 

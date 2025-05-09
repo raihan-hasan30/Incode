@@ -1,14 +1,19 @@
 import { PlusCircle } from "lucide-react";
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router";
+import createQuestAPI from "../../../repository/create-quest-api";
 
 export default function QuestForm() {
   const fileInputRef = useRef(null);
   const [published, setPublished] = useState(false);
   const [logoPreview, setLogoPreview] = useState(null);
+  const [logoFile, setLogoFile] = useState(null);
+  let navigate = useNavigate();
 
   const handleLogoUpload = (e) => {
-    fileInputRef.current = e.target.files[0];
-    setLogoPreview(URL.createObjectURL(e.target.files[0]));
+    const file = e.target.files[0];
+    setLogoFile(file);
+    setLogoPreview(file ? URL.createObjectURL(file) : null);
   };
 
   function togglePublish() {
@@ -18,23 +23,21 @@ export default function QuestForm() {
   function handleSubmit(e) {
     e.preventDefault();
 
-    const formData = new FormData();
-
-    // validate the form data
-    const questName = e.target.questName.value;
-    if (!questName) {
-      alert("Quest name is required");
-      return;
-    }
-    formData.append("questName", questName);
-
-    // Append the logo file if it exists
-    if (fileInputRef.current) {
-      formData.append("logo", fileInputRef.current);
+    const formData = new FormData(e.target);
+    formData.set("published", published);
+    if (logoFile) {
+      formData.set("logo", logoFile);
     }
 
-    // append published status
-    formData.append("published", published);
+    createQuestAPI(formData)
+      .then((response) => {
+        navigate(`/admin/${response.id}/lesson`);
+        console.log("Quest created successfully:", response);
+      })
+      .catch((error) => {
+        console.error("Error creating quest:", error);
+        alert("Error creating quest: " + error.message);
+      });
   }
 
   return (
@@ -92,13 +95,9 @@ export default function QuestForm() {
             <div className="flex items-start space-x-4">
               {/* Logo Preview */}
               <div className="flex-shrink-0">
-                {fileInputRef.current ? (
+                {logoPreview ? (
                   <div className="relative w-24 h-24 bg-zinc-700 rounded-md overflow-hidden">
-                    <img
-                      src={logoPreview || "/placeholder.svg"}
-                      alt="Quest logo preview"
-                      className="w-full h-full object-contain"
-                    />
+                    <img src={logoPreview} alt="Quest logo preview" className="w-full h-full object-contain" />
                   </div>
                 ) : (
                   <div className="w-24 h-24 bg-zinc-700 rounded-md flex items-center justify-center">

@@ -1,14 +1,14 @@
-export default async function loginAPI(params) {
+export default async function createLessonAPI(quest_id, params) {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/auth/login`,
+      `${import.meta.env.VITE_API_URL}/api/quest/${quest_id}/lesson`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify(params),
-        credentials: "include" // Ensure cookies are sent with the request
+        // credentials: "include" // Ensure cookies are sent with the request
       }
     )
 
