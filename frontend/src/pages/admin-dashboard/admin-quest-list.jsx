@@ -58,7 +58,11 @@ function AdminQuestList() {
       questName: quest.questName,
       logo: quest.logo,
       logoFile: null,
-      logoPreview: quest.logo ? (quest.logo.startsWith("http") ? quest.logo : `/api/quest/logo/${quest.logo}`) : null,
+      logoPreview: quest.logo
+        ? quest.logo.startsWith("http")
+          ? quest.logo
+          : `${import.meta.env.VITE_API_URL}/api/quest/logo/${quest.logo}`
+        : null,
       published: quest.published,
     });
     setEditDialog({ open: true, quest });
@@ -275,7 +279,11 @@ function AdminQuestList() {
             <div className="flex items-center gap-4">
               {createForm.logoPreview ? (
                 <img
-                  src={createForm.logoPreview}
+                  src={
+                    createForm.logoPreview.startsWith("blob:")
+                      ? createForm.logoPreview
+                      : `${import.meta.env.VITE_API_URL}/api/quest/logo/${createForm.logoPreview}`
+                  }
                   alt="Quest logo preview"
                   className="w-16 h-16 rounded bg-zinc-700 object-contain border border-zinc-700"
                 />
