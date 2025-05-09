@@ -61,7 +61,7 @@ function AdminQuestList() {
       logoPreview: quest.logo
         ? quest.logo.startsWith("http")
           ? quest.logo
-          : `${import.meta.env.VITE_API_URL}/api/quest/logo/${quest.logo}`
+          : `${import.meta.env.VITE_API_URL}${quest.logo}`
         : null,
       published: quest.published,
     });
@@ -198,7 +198,7 @@ function AdminQuestList() {
                 <img
                   src={editForm.logoPreview}
                   alt="Quest logo preview"
-                  className="w-16 h-16 rounded bg-zinc-700 object-contain border border-zinc-700"
+                  className="w-16 h-16 rounded bg-white p-1 object-cover border border-zinc-700"
                 />
               ) : (
                 <div className="w-16 h-16 rounded bg-zinc-700 flex items-center justify-center text-zinc-400 text-xs">
@@ -235,6 +235,7 @@ function AdminQuestList() {
           </div>
         </form>
       </Dialog>
+
       <Dialog
         open={createDialog}
         onClose={() => setCreateDialog(false)}
@@ -282,7 +283,7 @@ function AdminQuestList() {
                   src={
                     createForm.logoPreview.startsWith("blob:")
                       ? createForm.logoPreview
-                      : `${import.meta.env.VITE_API_URL}/api/quest/logo/${createForm.logoPreview}`
+                      : `${import.meta.env.VITE_API_URL}${createForm.logoPreview}`
                   }
                   alt="Quest logo preview"
                   className="w-16 h-16 rounded bg-zinc-700 object-contain border border-zinc-700"

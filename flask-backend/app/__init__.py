@@ -7,6 +7,7 @@ from .models import db, User
 from .api.user_routes import user_routes
 from .api.auth_routes import auth_routes
 from .api.quest_routes import quest_router
+from .api.lesson_routes import lesson_router
 from .config import Config
 
 # Correct the template folder path to resolve properly
@@ -34,6 +35,7 @@ jwt.init_app(app)
 app.register_blueprint(user_routes, url_prefix='/api/users')
 app.register_blueprint(auth_routes, url_prefix='/api/auth')
 app.register_blueprint(quest_router, url_prefix='/api/quest')
+app.register_blueprint(lesson_router, url_prefix='/api/lesson')
 
 @app.before_request
 def https_redirect():

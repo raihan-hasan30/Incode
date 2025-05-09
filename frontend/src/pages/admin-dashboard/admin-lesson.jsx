@@ -1,200 +1,131 @@
 import { PlusCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AdminBreadcumb from "../../components/admin/admin-breadcumb";
 import LessonTable from "../../components/admin/LessonTable";
 import Dialog from "../../components/Dialog";
+import { createLesson, deleteLesson, fetchLessons, updateLesson } from "../../repository/lesson-api";
+import { fetchQuests } from "../../repository/quest-api";
 
 function AdminLessonList() {
-  const [lesson, setLesson] = useState([
-    {
-      challenges: 0,
-      id: "new_quest_0ae1fa36-bed3-46b5-87e0-7b88fe5ab6b2",
-      lessons: [
-        {
-          id: "react-101/create-component",
-          name: "Create a React Component",
-          summery: "Defines a reusable UI block using a function.",
-          command: "function MyComponent() { return <div>Hello</div>; }",
-        },
-        {
-          id: "react-101/create-component",
-          name: "Create a React Component",
-          summery: "Defines a reusable UI block using a function.",
-          command: "function MyComponent() { return <div>Hello</div>; }",
-        },
-        {
-          id: "react-101/create-component",
-          name: "Create a React Component",
-          summery: "Defines a reusable UI block using a function.",
-          command: "function MyComponent() { return <div>Hello</div>; }",
-        },
-        {
-          id: "react-101/create-component",
-          name: "Create a React Component",
-          summery: "Defines a reusable UI block using a function.",
-          command: "function MyComponent() { return <div>Hello</div>; }",
-        },
-      ],
-      lessonsCount: 0,
-      published: true,
-      logo: "new_quest_0ae1fa36-bed3-46b5-87e0-7b88fe5ab6b2_vite.svg",
-      questName: "new quest",
-    },
-    {
-      challenges: 0,
-      id: "new_quest_0ae1fa36-bed3-46b5-87e0-7b88fe5ab6b2",
-      lessons: [
-        {
-          id: "react-101/create-component",
-          name: "Create a React Component",
-          summery: "Defines a reusable UI block using a function.",
-          command: "function MyComponent() { return <div>Hello</div>; }",
-        },
-        {
-          id: "react-101/create-component",
-          name: "Create a React Component",
-          summery: "Defines a reusable UI block using a function.",
-          command: "function MyComponent() { return <div>Hello</div>; }",
-        },
-        {
-          id: "react-101/create-component",
-          name: "Create a React Component",
-          summery: "Defines a reusable UI block using a function.",
-          command: "function MyComponent() { return <div>Hello</div>; }",
-        },
-        {
-          id: "react-101/create-component",
-          name: "Create a React Component",
-          summery: "Defines a reusable UI block using a function.",
-          command: "function MyComponent() { return <div>Hello</div>; }",
-        },
-      ],
-      lessonsCount: 0,
-      published: true,
-      logo: "new_quest_0ae1fa36-bed3-46b5-87e0-7b88fe5ab6b2_vite.svg",
-      questName: "new quest",
-    },
-    {
-      challenges: 0,
-      id: "new_quest_0ae1fa36-bed3-46b5-87e0-7b88fe5ab6b2",
-      lessons: [
-        {
-          id: "react-101/create-component",
-          name: "Create a React Component",
-          summery: "Defines a reusable UI block using a function.",
-          command: "function MyComponent() { return <div>Hello</div>; }",
-        },
-        {
-          id: "react-101/create-component",
-          name: "Create a React Component",
-          summery: "Defines a reusable UI block using a function.",
-          command: "function MyComponent() { return <div>Hello</div>; }",
-        },
-        {
-          id: "react-101/create-component",
-          name: "Create a React Component",
-          summery: "Defines a reusable UI block using a function.",
-          command: "function MyComponent() { return <div>Hello</div>; }",
-        },
-        {
-          id: "react-101/create-component",
-          name: "Create a React Component",
-          summery: "Defines a reusable UI block using a function.",
-          command: "function MyComponent() { return <div>Hello</div>; }",
-        },
-      ],
-      lessonsCount: 0,
-      published: true,
-      logo: "new_quest_0ae1fa36-bed3-46b5-87e0-7b88fe5ab6b2_vite.svg",
-      questName: "new quest",
-    },
-  ]);
+  const [quests, setQuests] = useState([]); // [{...quest, lessons: []}]
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [editDialog, setEditDialog] = useState({ open: false, questId: null, lesson: null });
-  const [editForm, setEditForm] = useState({ name: "", summery: "", command: "" });
+  const [editForm, setEditForm] = useState({ name: "", summary: "", command: "" });
   const [createDialog, setCreateDialog] = useState({ open: false, quest: null });
-  const [createForm, setCreateForm] = useState({ name: "", summery: "", command: "" });
+  const [createForm, setCreateForm] = useState({ name: "", summary: "", command: "" });
 
+  // Fetch all quests and their lessons
+  useEffect(() => {
+    setLoading(true);
+    fetchQuests()
+      .then(async (questsData) => {
+        // For each quest, fetch its lessons
+        const questsWithLessons = await Promise.all(
+          questsData.map(async (quest) => {
+            try {
+              const lessons = await fetchLessons(quest.id);
+              return { ...quest, lessons };
+            } catch {
+              return { ...quest, lessons: [] };
+            }
+          })
+        );
+        setQuests(questsWithLessons);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError("Failed to load quests or lessons");
+        setLoading(false);
+      });
+  }, []);
+
+  // Add lesson dialog
   const handleAddLesson = (questId) => {
-    const quest = lesson.find((q) => q.id === questId);
-    setCreateForm({ name: "", summery: "", command: "" });
+    const quest = quests.find((q) => q.id === questId);
+    setCreateForm({ name: "", summary: "", command: "" });
     setCreateDialog({ open: true, quest });
   };
 
-  const handleCreateLesson = () => {
-    setLesson((prev) =>
-      prev.map((q) =>
-        q.id === createDialog.quest.id
-          ? {
-              ...q,
-              lessons: [
-                ...q.lessons,
-                {
-                  id: `lesson_${Date.now()}`,
-                  name: createForm.name,
-                  summery: createForm.summery,
-                  command: createForm.command,
-                },
-              ],
-            }
-          : q
-      )
-    );
-    setCreateDialog({ open: false, quest: null });
-    setCreateForm({ name: "", summery: "", command: "" });
-  };
-
-  const handleEditLesson = (questId, lessonId) => {
-    const quest = lesson.find((q) => q.id === questId);
-    const l = quest.lessons.find((l) => l.id === lessonId);
-    setEditForm({ name: l.name, summery: l.summery, command: l.command });
-    setEditDialog({ open: true, questId, lesson: l });
-  };
-
-  const handleDeleteLesson = (questId, lessonId) => {
-    if (window.confirm("Are you sure you want to delete this lesson?")) {
-      setLesson((prev) =>
-        prev.map((q) => (q.id === questId ? { ...q, lessons: q.lessons.filter((l) => l.id !== lessonId) } : q))
-      );
+  // Create lesson
+  const handleCreateLesson = async () => {
+    try {
+      const { quest } = createDialog;
+      const data = { name: createForm.name, summary: createForm.summary, command: createForm.command };
+      const created = await createLesson(quest.id, data);
+      setQuests((prev) => prev.map((q) => (q.id === quest.id ? { ...q, lessons: [...q.lessons, created] } : q)));
+      setCreateDialog({ open: false, quest: null });
+      setCreateForm({ name: "", summary: "", command: "" });
+    } catch (err) {
+      alert("Failed to create lesson");
     }
   };
 
+  // Edit lesson dialog
+  const handleEditLesson = (questId, lessonId) => {
+    const quest = quests.find((q) => q.id === questId);
+    const l = quest.lessons.find((l) => l.id === lessonId);
+    setEditForm({ name: l.name, summary: l.summary, command: l.command });
+    setEditDialog({ open: true, questId, lesson: l });
+  };
+
+  // Edit lesson
+  const handleEditSave = async () => {
+    try {
+      const { questId, lesson } = editDialog;
+      const data = { name: editForm.name, summary: editForm.summary, command: editForm.command };
+      const updated = await updateLesson(questId, lesson.id, data);
+      setQuests((prev) =>
+        prev.map((q) =>
+          q.id === questId ? { ...q, lessons: q.lessons.map((l) => (l.id === lesson.id ? updated : l)) } : q
+        )
+      );
+      setEditDialog({ open: false, questId: null, lesson: null });
+    } catch (err) {
+      alert("Failed to update lesson");
+    }
+  };
+
+  // Delete lesson
+  const handleDeleteLesson = async (questId, lessonId) => {
+    if (!window.confirm("Are you sure you want to delete this lesson?")) return;
+    try {
+      await deleteLesson(questId, lessonId);
+      setQuests((prev) =>
+        prev.map((q) => (q.id === questId ? { ...q, lessons: q.lessons.filter((l) => l.id !== lessonId) } : q))
+      );
+    } catch (err) {
+      alert("Failed to delete lesson");
+    }
+  };
+
+  // Form changes
   const handleEditFormChange = (e) => {
     const { name, value } = e.target;
     setEditForm((prev) => ({ ...prev, [name]: value }));
   };
-
   const handleCreateFormChange = (e) => {
     const { name, value } = e.target;
     setCreateForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleEditSave = () => {
-    setLesson((prev) =>
-      prev.map((q) =>
-        q.id === editDialog.questId
-          ? {
-              ...q,
-              lessons: q.lessons.map((l) => (l.id === editDialog.lesson.id ? { ...l, ...editForm } : l)),
-            }
-          : q
-      )
-    );
-    setEditDialog({ open: false, questId: null, lesson: null });
-  };
+  if (loading) return <div className="p-6 text-zinc-300">Loading lessons...</div>;
+  if (error) return <div className="p-6 text-red-500">{error}</div>;
+  if (!quests.length) return <div className="p-6 text-zinc-400">No quests found. Please create a quest first.</div>;
 
   return (
     <div className="p-6">
       <AdminBreadcumb title="Lesson List" subtitle="Manage lessons for each quest below." />
       <div className="space-y-10 mt-8">
-        {lesson.map((quest) => (
+        {quests.map((quest) => (
           <div key={quest.id} className="border border-zinc-800 rounded-lg bg-zinc-900 shadow-lg">
             <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800 bg-zinc-800 rounded-t-lg">
               <div className="flex items-center gap-4">
                 {quest.logo ? (
                   <img
-                    src={`/static/quest_logos/${quest.logo}`}
+                    src={quest.logo.startsWith("http") ? quest.logo : `${import.meta.env.VITE_API_URL}${quest.logo}`}
                     alt={quest.questName}
-                    className="w-10 h-10 rounded bg-zinc-700 object-contain border border-zinc-700"
+                    className="w-10 h-10 rounded  object-contain border border-zinc-700 p-1 bg-white"
                   />
                 ) : (
                   <div className="w-10 h-10 rounded bg-zinc-700 flex items-center justify-center text-zinc-400 text-xs">
@@ -262,8 +193,8 @@ function AdminLessonList() {
           <div>
             <label className="block text-sm text-zinc-300 mb-1">Summary</label>
             <input
-              name="summery"
-              value={editForm.summery}
+              name="summary"
+              value={editForm.summary}
               onChange={handleEditFormChange}
               className="w-full bg-zinc-800 text-zinc-100 p-2 rounded border-none focus:ring-2 focus:ring-amber-600"
             />
@@ -305,9 +236,13 @@ function AdminLessonList() {
           <div className="flex items-center gap-4 mb-4">
             {createDialog.quest.logo ? (
               <img
-                src={`/static/quest_logos/${createDialog.quest.logo}`}
+                src={
+                  createDialog.quest.logo.startsWith("http")
+                    ? createDialog.quest.logo
+                    : `${import.meta.env.VITE_API_URL}${createDialog.quest.logo}`
+                }
                 alt={createDialog.quest.questName}
-                className="w-10 h-10 rounded bg-zinc-700 object-contain border border-zinc-700"
+                className="w-10 h-10 rounded  object-contain border border-zinc-700 p-1 bg-white"
               />
             ) : (
               <div className="w-10 h-10 rounded bg-zinc-700 flex items-center justify-center text-zinc-400 text-xs">
@@ -331,8 +266,8 @@ function AdminLessonList() {
           <div>
             <label className="block text-sm text-zinc-300 mb-1">Summary</label>
             <textarea
-              name="summery"
-              value={createForm.summery}
+              name="summary"
+              value={createForm.summary}
               onChange={handleCreateFormChange}
               rows={3}
               className="w-full bg-zinc-800 text-zinc-100 p-2 rounded border-none focus:ring-2 focus:ring-amber-600 resize-none"

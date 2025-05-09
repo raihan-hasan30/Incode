@@ -17,9 +17,9 @@ function QuestTable({ quests, onTogglePublish, onEdit, onDelete }) {
               <td className="px-6 py-4 whitespace-nowrap">
                 {quest.logo ? (
                   <img
-                    src={quest.logo.startsWith("http") ? quest.logo : `/static/quest_logos/${quest.logo}`}
+                    src={quest.logo.startsWith("http") ? quest.logo : `${import.meta.env.VITE_API_URL}${quest.logo}`}
                     alt={quest.questName}
-                    className="w-10 h-10 rounded bg-zinc-700 object-contain border border-zinc-700"
+                    className="w-10 h-10 rounded bg-white p-1 object-contain border border-zinc-700"
                   />
                 ) : (
                   <div className="w-10 h-10 rounded bg-zinc-700 flex items-center justify-center text-zinc-400 text-xs">
