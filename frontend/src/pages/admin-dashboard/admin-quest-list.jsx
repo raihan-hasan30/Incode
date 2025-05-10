@@ -54,6 +54,7 @@ function AdminQuestList() {
   // Edit dialog open
   const handleEdit = (id) => {
     const quest = quests.find((q) => q.id === id);
+
     setEditForm({
       questName: quest.questName,
       logo: quest.logo,
@@ -73,6 +74,7 @@ function AdminQuestList() {
     const { name, value } = e.target;
     setEditForm((prev) => ({ ...prev, [name]: value }));
   };
+
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
     setEditForm((prev) => ({
@@ -81,6 +83,7 @@ function AdminQuestList() {
       logoPreview: file ? URL.createObjectURL(file) : prev.logoPreview,
     }));
   };
+
   // Edit save
   const handleEditSave = async () => {
     try {
@@ -145,6 +148,7 @@ function AdminQuestList() {
   return (
     <div className="p-6">
       <AdminBreadcumb title="Quest List" subtitle="You can customize it further based on your needs." />
+
       <div className="flex justify-end mb-4">
         <button
           onClick={() => setCreateDialog(true)}
@@ -153,7 +157,9 @@ function AdminQuestList() {
           <PlusCircle className="w-5 h-5" /> Add Quest
         </button>
       </div>
+
       <QuestTable quests={quests} onTogglePublish={handleTogglePublish} onEdit={handleEdit} onDelete={handleDelete} />
+
       <Dialog
         open={editDialog.open}
         onClose={() => setEditDialog({ open: false, quest: null })}

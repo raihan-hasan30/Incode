@@ -15,7 +15,7 @@ template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 app = Flask(__name__, template_folder=template_dir)
 
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']
-app.config['JWT_COOKIE_SECURE'] = True  # set to True in production (requires HTTPS)
+app.config['JWT_COOKIE_SECURE'] = False  # set to True in production (requires HTTPS)
 app.config['JWT_ACCESS_COOKIE_PATH'] = '/'
 app.config['JWT_COOKIE_CSRF_PROTECT'] = True
 

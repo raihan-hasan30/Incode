@@ -22,12 +22,12 @@ def login():
 
         access_token = create_access_token(identity=user.email)
         response = jsonify({"login" : True, "user" : user.to_dict()})
-        set_access_cookies(response, access_token, max_age=3600, path="/", samesite="None", secure=True)
+        set_access_cookies(response, access_token)
 
         return response
 
     except Exception as e:
-        return {"errors": ["Server error. Please try again."]}, 500
+        return {"errors": ["Server error. Please try again.", str(e)]}, 500
 
 @auth_routes.route("/register", methods=["POST"])
 def register():
