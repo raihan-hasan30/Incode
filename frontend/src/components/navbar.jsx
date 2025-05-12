@@ -1,5 +1,4 @@
-import React from "react";
-import { NavLink, Outlet } from "react-router";
+import { NavLink } from "react-router";
 
 function Navbar() {
   return (
@@ -18,8 +17,6 @@ function Navbar() {
           <img src="/avatar.svg" alt="avatar" className="h-8" />
         </div>
       </div>
-
-      <Outlet />
     </>
   );
 }

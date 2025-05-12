@@ -1,11 +1,13 @@
 import os
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, send_from_directory
 from flask_cors import CORS
 from flask_login import LoginManager
 from flask_jwt_extended import JWTManager
 from .models import db, User
 from .api.user_routes import user_routes
 from .api.auth_routes import auth_routes
+from .api.quest_routes import quest_router
+from .api.lesson_routes import lesson_router
 from .config import Config
 
 # Correct the template folder path to resolve properly
@@ -22,9 +24,8 @@ app.config['JWT_COOKIE_CSRF_PROTECT'] = True
 app.config.from_object(Config)
 db.init_app(app)
 
-# Enable CORS with cookies
-# Enable CORS with cookies and specify the allowed origin
-CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
+# Enable CORS with cookies and allow all origins
+CORS(app, supports_credentials=True)
 
 # Initialize JWT Manager
 jwt = JWTManager()
@@ -33,6 +34,8 @@ jwt.init_app(app)
 # Register blueprints
 app.register_blueprint(user_routes, url_prefix='/api/users')
 app.register_blueprint(auth_routes, url_prefix='/api/auth')
+app.register_blueprint(quest_router, url_prefix='/api/quest')
+app.register_blueprint(lesson_router, url_prefix='/api/lesson')
 
 @app.before_request
 def https_redirect():
@@ -44,12 +47,18 @@ def https_redirect():
 
 @app.route('/')
 def react_root():
-    return "hello"
+    return 
 
 # Update the 404 error handler to render the index.html template
 @app.errorhandler(404)
 def not_found(e):
     return render_template('index.html')
+
+
+@app.route('/api/quest/logo/<filename>')
+def serve_quest_logo(filename):
+    static_dir = os.path.join(os.path.dirname(__file__), 'static', 'quest_logos')
+    return send_from_directory(static_dir, filename)
 
 
 app.run(debug=True)

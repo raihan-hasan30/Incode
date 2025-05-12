@@ -1,48 +1,62 @@
-import React from "react"
-import { Link } from "react-router"
+import { Link } from "react-router";
 
 function Card({ quest }) {
+  const logoUrl = quest.logo
+    ? quest.logo.startsWith("http")
+      ? quest.logo
+      : `${import.meta.env.VITE_API_URL}/api/quest/logo/${quest.logo}`
+    : null;
   return (
-    <div className="bg-[#1e1e1e] rounded-lg p-5 w-64 transition-transform duration-300 hover:-translate-y-1 ">
-      <img src={quest.logo} className="w-12 h-12 mb-4" />
-      <h1 className="text-white text-2xl font-bold mb-5">{quest.questName}</h1>
-      <div className="flex items-center mb-2 text-gray-400">
+    <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-2xl p-6 w-72 shadow-xl border border-zinc-700 cursor-pointer group transition-all duration-500 hover:-translate-y-1 flex flex-col items-center relative group">
+      {/* Logo */}
+      {logoUrl ? (
         <img
-          src="/tick.svg"
-          alt="tick"
-          className="w-4 h-4 text-yellow-400 mr-2"
+          src={import.meta.env.VITE_API_URL + quest.logo}
+          className="w-20 h-20 mb-4 bg-white p-2 rounded-xl  object-contain border-2 border-transparent group-hover:border-amber-600 shadow-lg group-hover:shadow-amber-600/50 transition-all duration-300"
+          alt={quest.questName}
         />
-        <span>{quest.lessons}</span>
+      ) : (
+        <div className="w-20 h-20 mb-4 bg-zinc-700 rounded-xl flex items-center justify-center text-zinc-400 text-base border-2 border-zinc-600">
+          No Logo
+        </div>
+      )}
+      {/* Quest Name */}
+      <h2 className="text-white text-2xl font-extrabold mb-2 text-center tracking-tight group-hover:text-amber-600 transition-colors">
+        {quest.questName}
+      </h2>
+      {/* ID badge */}
+      <span className="text-xs font-mono text-zinc-400 bg-zinc-700 px-2 py-0.5 rounded mb-3">
+        {quest.id.slice(0, 8)}
+      </span>
+      {/* Lessons & Challenges */}
+      <div className="flex justify-center gap-6 w-full mb-4">
+        <div className="flex flex-col items-center">
+          <span className="text-amber-400 text-lg font-bold">{quest.lessonsCount ?? 0}</span>
+          <span className="text-xs text-zinc-400 mt-1">Lessons</span>
+        </div>
+        <div className="flex flex-col items-center">
+          <span className="text-amber-400 text-lg font-bold">{quest.challenges ?? 0}</span>
+          <span className="text-xs text-zinc-400 mt-1">Challenges</span>
+        </div>
       </div>
-      <div className="flex items-center mb-2 text-gray-400">
-        <img
-          src="/tick.svg"
-          alt="tick"
-          className="w-4 h-4 text-yellow-400 mr-2"
-        />
-        <span>{quest.challanges}</span>
-      </div>
-      <div className="flex justify-between mt-8">
-        <Link to={`/practice/${quest.id}`} className="flex items-center text-gray-400 hover:text-white text-sm">
-          <img
-            src="/link.svg"
-            alt="link"
-            className="w-4 h-4 text-yellow-400 mr-2"
-          />
-          <span className="mr-1"></span> Practice
+      {/* Actions */}
+      <div className="flex justify-between w-full mt-auto pt-4 border-t border-zinc-700 gap-2">
+        <Link
+          to={`/practice/${quest.id}`}
+          className="flex-1 flex items-center justify-center gap-2 bg-zinc-800 hover:bg-amber-500 text-white font-bold py-2 rounded-lg  text-sm shadow focus:outline-none focus:ring-2 focus:ring-amber-600 hover:shadow-lg hover:shadow-amber-600/50 transition-all duration-300"
+        >
+          <img src="/link.svg" alt="link" className="w-4 h-4" /> Practice
         </Link>
-
-        <button className="flex items-center text-gray-400 hover:text-white text-sm">
-          <img
-            src="/link.svg"
-            alt="link"
-            className="w-4 h-4 text-yellow-400 mr-2"
-          />
-          <span className="mr-1"></span> Battle
-        </button>
+        <Link
+          to={`/battle/${quest.id}`}
+          className="flex-1 flex items-center justify-center gap-2 bg-zinc-800 hover:bg-amber-500 text-white font-bold py-2 rounded-lg  text-sm shadow focus:outline-none focus:ring-2 focus:ring-amber-600 hover:shadow-lg hover:shadow-amber-600/50 transition-all duration-300"
+          disabled
+        >
+          <img src="/link.svg" alt="link" className="w-4 h-4" /> Battle
+        </Link>
       </div>
     </div>
-  )
+  );
 }
 
-export default Card
+export default Card;

@@ -1,52 +1,48 @@
-import React, { useState } from "react"
-import { LoaderCircle } from "lucide-react"
-import { useDispatch } from "react-redux"
-import { useNavigate } from "react-router"
-import { setAuth } from "../../redux/auth/authSlice"
-import loginAPI from "../../repository/login-api"
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
+import { setAuth } from "../../redux/auth/authSlice";
+import loginAPI from "../../repository/login-api";
 
 function LoginForm() {
-  const [loading, setLoading] = useState(false)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   function handleSubmit(e) {
-    e.preventDefault()
-    setLoading(true)
-    const formData = new FormData(e.target)
-    console.log(e.target)
-    console.log(formData)
-    console.log(formData.entries())
-    const data = Object.fromEntries(formData.entries())
-    console.log(data)
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    e.preventDefault();
+    setLoading(true);
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(data.email)) {
-      setLoading(false)
-      alert("Please enter a valid email address")
-      return
+      setLoading(false);
+      alert("Please enter a valid email address");
+      return;
     }
 
     if (data.password.trim() === "") {
-      setLoading(false)
-      alert("Password cannot be empty")
-      return
+      setLoading(false);
+      alert("Password cannot be empty");
+      return;
     }
 
     const params = {
       email: data.email,
-      password: data.password
-    }
+      password: data.password,
+    };
 
     loginAPI(params)
-      .then(respose => {
-        setLoading(false)
-        dispatch(setAuth(respose.user))
-        navigate("/")
+      .then((respose) => {
+        setLoading(false);
+        dispatch(setAuth(respose.user));
+        navigate("/");
       })
-      .catch(err => {
-        setLoading(false)
-        alert(err.message)
-      })
+      .catch((err) => {
+        setLoading(false);
+        alert(err.message);
+      });
   }
 
   return (
@@ -74,7 +70,7 @@ function LoginForm() {
         </button>
       </div>
     </form>
-  )
+  );
 }
 
-export default LoginForm
+export default LoginForm;

@@ -1,7 +1,5 @@
-import { useState, useRef } from "react"
-import QuestForm from "../../components/admin/create-quest/quest-form"
-import AddLessonForm from "../../components/admin/create-quest/add-lesson-form"
-import LessonList from "../../components/admin/create-quest/lesson-list"
+import { useRef, useState } from "react";
+import QuestForm from "../../components/admin/create-quest/quest-form";
 
 export default function CreateQuest() {
   const [quest, setQuest] = useState({
@@ -9,140 +7,105 @@ export default function CreateQuest() {
     logo: null,
     logoPreview: null,
     lessons: [],
-    published: false
-  })
+    published: false,
+  });
 
-  const [editingLessonIndex, setEditingLessonIndex] = useState(null)
-  const fileInputRef = useRef(null)
+  const [editingLessonIndex, setEditingLessonIndex] = useState(null);
+  const fileInputRef = useRef(null);
 
   // Generate ID from name (remove spaces and convert to lowercase)
-  const generateId = name => {
-    return name.toLowerCase().replace(/\s+/g, "-")
-  }
+  const generateId = (name) => {
+    return name.toLowerCase().replace(/\s+/g, "-");
+  };
 
   // Handle quest name and logo changes
-  const handleQuestChange = e => {
-    const { name, value } = e.target
-    setQuest(prev => ({ ...prev, [name]: value }))
-  }
+  const handleQuestChange = (e) => {
+    const { name, value } = e.target;
+    setQuest((prev) => ({ ...prev, [name]: value }));
+  };
 
   // Handle logo upload
-  const handleLogoUpload = e => {
-    const file = e.target.files[0]
+  const handleLogoUpload = (e) => {
+    const file = e.target.files[0];
     if (file) {
-      setQuest(prev => ({
+      setQuest((prev) => ({
         ...prev,
         logo: file,
-        logoPreview: URL.createObjectURL(file)
-      }))
+        logoPreview: URL.createObjectURL(file),
+      }));
     }
-  }
+  };
 
   // Toggle publish status
   const togglePublish = () => {
-    setQuest(prev => ({ ...prev, published: !prev.published }))
-  }
+    setQuest((prev) => ({ ...prev, published: !prev.published }));
+  };
 
   // Add a new lesson
-  const addLesson = lesson => {
+  const addLesson = (lesson) => {
     if (editingLessonIndex !== null) {
       // Update existing lesson
-      const updatedLessons = [...quest.lessons]
+      const updatedLessons = [...quest.lessons];
       updatedLessons[editingLessonIndex] = {
         ...lesson,
-        id: `${generateId(quest.questName)}/${generateId(lesson.name)}`
-      }
+        id: `${generateId(quest.questName)}/${generateId(lesson.name)}`,
+      };
 
-      setQuest(prev => ({ ...prev, lessons: updatedLessons }))
-      setEditingLessonIndex(null)
+      setQuest((prev) => ({ ...prev, lessons: updatedLessons }));
+      setEditingLessonIndex(null);
     } else {
       // Add new lesson
       const newLesson = {
         ...lesson,
-        id: `${generateId(quest.questName)}/${generateId(lesson.name)}`
-      }
+        id: `${generateId(quest.questName)}/${generateId(lesson.name)}`,
+      };
 
-      setQuest(prev => ({
+      setQuest((prev) => ({
         ...prev,
-        lessons: [...prev.lessons, newLesson]
-      }))
+        lessons: [...prev.lessons, newLesson],
+      }));
     }
-  }
+  };
 
   // Edit a lesson
-  const editLesson = index => {
-    setEditingLessonIndex(index)
-  }
+  const editLesson = (index) => {
+    setEditingLessonIndex(index);
+  };
 
   // Delete a lesson
-  const deleteLesson = index => {
-    const updatedLessons = quest.lessons.filter((_, i) => i !== index)
-    setQuest(prev => ({ ...prev, lessons: updatedLessons }))
-  }
+  const deleteLesson = (index) => {
+    const updatedLessons = quest.lessons.filter((_, i) => i !== index);
+    setQuest((prev) => ({ ...prev, lessons: updatedLessons }));
+  };
 
   // Handle form submission
-  const handleSubmit = e => {
-    e.preventDefault()
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
     // Create final quest object
     const finalQuest = {
       ...quest,
-      id: generateId(quest.questName)
-    }
+      id: generateId(quest.questName),
+    };
 
     // Log the data (in a real app, this would be sent to a database)
-    console.log("Quest Data:", finalQuest)
-  }
+    console.log("Quest Data:", finalQuest);
+  };
 
   return (
     <div className=" text-zinc-100">
       <div className=" mx-auto">
         <h1 className="text-3xl font-bold mb-8 text-amber-600">Create Quest</h1>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Quest Details Section */}
-          <QuestForm
-            quest={quest}
-            handleQuestChange={handleQuestChange}
-            handleLogoUpload={handleLogoUpload}
-            fileInputRef={fileInputRef}
-            togglePublish={togglePublish}
-          />
-
-          {/* Lessons Section */}
-          <div className=" p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold mb-4">Lessons</h2>
-
-            {/* List of added lessons */}
-            <LessonList
-              lessons={quest.lessons}
-              onEdit={editLesson}
-              onDelete={deleteLesson}
-            />
-
-            {/* Add/Edit lesson form */}
-            <AddLessonForm
-              addLesson={addLesson}
-              editingLesson={
-                editingLessonIndex !== null
-                  ? quest.lessons[editingLessonIndex]
-                  : null
-              }
-              setEditingLessonIndex={setEditingLessonIndex}
-            />
-          </div>
-
-          {/* Submit Button */}
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className="bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
-            >
-              Save Quest
-            </button>
-          </div>
-        </form>
+        {/* Quest Details Section */}
+        <QuestForm
+          quest={quest}
+          handleQuestChange={handleQuestChange}
+          handleLogoUpload={handleLogoUpload}
+          fileInputRef={fileInputRef}
+          togglePublish={togglePublish}
+        />
       </div>
     </div>
-  )
+  );
 }

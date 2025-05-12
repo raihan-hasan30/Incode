@@ -1,14 +1,13 @@
-export default async function loginAPI(params) {
+export default async function createQuestAPI(params) {
   try {
+    // params should be a FormData object
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/auth/login`,
+      `${import.meta.env.VITE_API_URL}/api/quest/create`,
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(params),
-        credentials: "include" // Ensure cookies are sent with the request
+        body: params, // FormData
+        // Do not set Content-Type header; browser will set it automatically
+        // credentials: "include"
       }
     )
 
