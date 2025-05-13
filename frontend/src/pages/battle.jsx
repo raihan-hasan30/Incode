@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import BattleLessonsBody from "../components/battle/battle-lesson-body";
+import BattleSummery from "../components/battle/battle-summery";
 import BattleCountdown from "../components/battle/BattleCountdown";
 import BattleStartDialog from "../components/battle/BattleStartDialog";
 import { fetchLessons } from "../repository/lesson-api";
@@ -71,7 +72,7 @@ function BattleZone() {
     return <div className="p-8 text-zinc-400 text-center text-lg">No lessons available for this quest.</div>;
 
   return (
-    <div className="flex justify-between py-10 gap-10 max-w-7xl mx-auto">
+    <div className="py-10 gap-10 max-w-7xl mx-auto">
       <BattleStartDialog open={showStart} onStart={handleStart} />
       <BattleCountdown start={showCountdown} onDone={handleCountdownDone} />
       <div className="flex-1">
@@ -87,6 +88,7 @@ function BattleZone() {
           />
         )}
       </div>
+      <BattleSummery />
     </div>
   );
 }

@@ -33,22 +33,20 @@ function BattleTypingArea({
     const handleKeyDown = (event) => {
       if (event.key === "Tab") {
         event.preventDefault();
-        if (typedText.length >= command.length) {
-          // Save stats on completion
-          setTypingStats((prev) => ({
-            ...prev,
-            [id]: {
-              wrong: wrongCount,
-              chars: typedText.length,
-              time: elapsed + (startTime ? Date.now() - startTime : 0),
-            },
-          }));
-          nextCommand();
-          setTypedText("");
-          setWrongCount(0);
-          setElapsed(0);
-          setStartTime(null);
-        }
+        // Save stats on completion
+        setTypingStats((prev) => ({
+          ...prev,
+          [id]: {
+            wrong: wrongCount,
+            chars: typedText.length,
+            time: elapsed + (startTime ? Date.now() - startTime : 0),
+          },
+        }));
+        nextCommand();
+        setTypedText("");
+        setWrongCount(0);
+        setElapsed(0);
+        setStartTime(null);
       } else if (event.key === "Backspace") {
         setTypedText((prev) => prev.slice(0, -1));
       } else if (event.key.length === 1) {
