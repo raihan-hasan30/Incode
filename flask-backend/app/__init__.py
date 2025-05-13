@@ -18,14 +18,14 @@ app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 app.config['JWT_COOKIE_SECURE'] = False  # set to True in production (requires HTTPS)
 app.config['JWT_ACCESS_COOKIE_PATH'] = '/'
 app.config['JWT_COOKIE_CSRF_PROTECT'] = True
-
+app.config['JWT_COOKIE_SAMESITE'] = 'Lax'  # Use Lax for local dev, None for production
 
 # Config
 app.config.from_object(Config)
 db.init_app(app)
 
-# Enable CORS with cookies and allow all origins
-CORS(app, supports_credentials=True)
+# Enable CORS with cookies and allow only frontend origin
+CORS(app, supports_credentials=True, origins=["http://localhost:5174"])
 
 # Initialize JWT Manager
 jwt = JWTManager()

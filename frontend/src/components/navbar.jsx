@@ -10,8 +10,8 @@ function Navbar() {
 
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-4">
+            <NavLink to={"/admin"}>Admin</NavLink>
             <NavLink to={"/quest-list"}>Quest List</NavLink>
-            <NavLink to={"/admin/create-quest"}>Quest Create</NavLink>
             <NavLink to={"/login"}>Login</NavLink>
           </div>
           <img src="/avatar.svg" alt="avatar" className="h-8" />

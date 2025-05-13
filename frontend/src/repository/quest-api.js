@@ -2,7 +2,9 @@
 const API_URL = import.meta.env.VITE_API_URL || "";
 
 export async function fetchQuests() {
-  const res = await fetch(`${API_URL}/api/quest/?all=true`);
+  const res = await fetch(`/api/quest/?all=true`, {
+    credentials: "include", // <-- Add this line
+  });
   if (!res.ok) throw new Error("Failed to fetch quests");
   return res.json();
 }

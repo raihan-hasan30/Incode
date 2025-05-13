@@ -1,6 +1,6 @@
-import TypingArea from "./typing-area";
+import TypingArea from "./battle-typing-area";
 
-function LessonsBody({
+function BattleLessonsBody({
   lesson,
   setActiveIndex,
   lessonHistory,
@@ -55,4 +55,4 @@ function LessonsBody({
   );
 }
 
-export default LessonsBody;
+export default BattleLessonsBody;

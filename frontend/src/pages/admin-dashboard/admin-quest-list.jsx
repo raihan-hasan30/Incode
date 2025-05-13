@@ -36,7 +36,13 @@ function AdminQuestList() {
         setLoading(false);
       })
       .catch((err) => {
-        setError("Failed to load quests");
+        if (err.message.includes("401")) {
+          // Redirect to login or show a message
+          setError("You must be logged in to view quests.");
+          // Optionally: window.location.href = "/login";
+        } else {
+          setError("Failed to load quests");
+        }
         setLoading(false);
       });
   }, []);

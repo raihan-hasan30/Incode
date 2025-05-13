@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-function TypingArea({
+function BattleTypingArea({
   command,
   nextCommand,
   isReady,
@@ -82,7 +82,7 @@ function TypingArea({
     const typedChars = typedText.split("");
     const elements = [];
     for (let i = 0; i < chars.length; i++) {
-      let className = "text-zinc-700";
+      let className = "text-transparent";
       if (i < typedChars.length) {
         if (typedChars[i] === chars[i]) {
           className = "text-amber-700";
@@ -100,7 +100,7 @@ function TypingArea({
   };
 
   return (
-    <div className="min-h-96 flex items-center justify-center relative ">
+    <div className="min-h-96 max-h-96 flex items-center justify-center relative ">
       <h2 className="text-2xl font-bold">{renderCharacters()}</h2>
       {typedText.length >= command.length && (
         <button
@@ -114,4 +114,4 @@ function TypingArea({
   );
 }
 
-export default TypingArea;
+export default BattleTypingArea;

@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import Lessons from "../components/lessons";
-import LessonsBody from "../components/lessonsBody";
-import LessonsSummary from "../components/lessonsSummary";
+import { useParams } from "react-router-dom";
+import BattleLessonsBody from "../components/battle/battle-lesson-body";
+import BattleCountdown from "../components/battle/BattleCountdown";
+import BattleStartDialog from "../components/battle/BattleStartDialog";
 import { fetchLessons } from "../repository/lesson-api";
 import { fetchQuests } from "../repository/quest-api";
 
-function AllParctices() {
+function BattleZone() {
   const { questId } = useParams();
-  const navigate = useNavigate();
   const [quest, setQuest] = useState(null);
   const [lessons, setLessons] = useState([]);
   const [lessonHistory, setLessonHistory] = useState({});
@@ -16,6 +15,17 @@ function AllParctices() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [typingStats, setTypingStats] = useState({});
+  const [showStart, setShowStart] = useState(true);
+  const [showCountdown, setShowCountdown] = useState(false);
+
+  const handleStart = () => {
+    setShowStart(false);
+    setShowCountdown(true);
+  };
+
+  const handleCountdownDone = () => {
+    setShowCountdown(false);
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -62,25 +72,23 @@ function AllParctices() {
 
   return (
     <div className="flex justify-between py-10 gap-10 max-w-7xl mx-auto">
-      <div className="w-1/4 min-w-[220px]">
-        <Lessons lessons={lessons} activeIndex={activeIndex} quest={quest} setActiveIndex={setActiveIndex} />
-      </div>
+      <BattleStartDialog open={showStart} onStart={handleStart} />
+      <BattleCountdown start={showCountdown} onDone={handleCountdownDone} />
       <div className="flex-1">
-        <LessonsBody
-          lesson={lessons[activeIndex]}
-          setActiveIndex={setActiveIndex}
-          lessonHistory={lessonHistory}
-          setLessonHistory={setLessonHistory}
-          lessons={lessons}
-          typingStats={typingStats}
-          setTypingStats={setTypingStats}
-        />
-      </div>
-      <div className="w-1/4 min-w-[220px]">
-        <LessonsSummary lessons={lessons} lessonHistory={lessonHistory} typingStats={typingStats} quest={quest} />
+        {!showStart && !showCountdown && (
+          <BattleLessonsBody
+            lesson={lessons[activeIndex]}
+            setActiveIndex={setActiveIndex}
+            lessonHistory={lessonHistory}
+            setLessonHistory={setLessonHistory}
+            lessons={lessons}
+            typingStats={typingStats}
+            setTypingStats={setTypingStats}
+          />
+        )}
       </div>
     </div>
   );
 }
 
-export default AllParctices;
+export default BattleZone;
