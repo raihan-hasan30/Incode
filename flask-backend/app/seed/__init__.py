@@ -1,0 +1,1 @@
+from .lesson_seed import seed_lessons

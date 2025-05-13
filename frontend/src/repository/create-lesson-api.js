@@ -1,7 +1,7 @@
 export default async function createLessonAPI(quest_id, params) {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/quest/${quest_id}/lesson`,
+      `/api/quest/${quest_id}/lesson`,
       {
         method: "POST",
         headers: {

@@ -10,7 +10,7 @@ export async function fetchQuests() {
 }
 
 export async function createQuest(formData) {
-  const res = await fetch(`${API_URL}/api/quest/create`, {
+  const res = await fetch(`/api/quest/create`, {
     method: "POST",
     body: formData,
   });
@@ -19,7 +19,7 @@ export async function createQuest(formData) {
 }
 
 export async function updateQuest(id, formData) {
-  const res = await fetch(`${API_URL}/api/quest/${id}`, {
+  const res = await fetch(`/api/quest/${id}`, {
     method: "PUT",
     body: formData,
   });
@@ -28,14 +28,15 @@ export async function updateQuest(id, formData) {
 }
 
 export async function deleteQuest(id) {
-  const res = await fetch(`${API_URL}/api/quest/${id}`, {
-    method: "DELETE" });
+  const res = await fetch(`/api/quest/${id}`, {
+    method: "DELETE"
+  });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
 
 export async function toggleQuestPublish(id) {
-  const res = await fetch(`${API_URL}/api/quest/${id}/publish`, {
+  const res = await fetch(`/api/quest/${id}/publish`, {
     method: "PATCH",
   });
   if (!res.ok) throw new Error(await res.text());

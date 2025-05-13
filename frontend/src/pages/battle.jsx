@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import BattleLessonsBody from "../components/battle/battle-lesson-body";
 import BattleSummery from "../components/battle/battle-summery";
 import BattleCountdown from "../components/battle/BattleCountdown";
+import BattleResultDialog from "../components/battle/BattleResultDialog";
 import BattleStartDialog from "../components/battle/BattleStartDialog";
 import { fetchLessons } from "../repository/lesson-api";
 import { fetchQuests } from "../repository/quest-api";
@@ -18,6 +19,7 @@ function BattleZone() {
   const [typingStats, setTypingStats] = useState({});
   const [showStart, setShowStart] = useState(true);
   const [showCountdown, setShowCountdown] = useState(false);
+  const [showResult, setShowResult] = useState(false);
 
   const handleStart = () => {
     setShowStart(false);
@@ -27,6 +29,28 @@ function BattleZone() {
   const handleCountdownDone = () => {
     setShowCountdown(false);
   };
+
+  // Calculate point (same as BattleSummery)
+  let point = 0;
+  lessons.forEach((lesson) => {
+    const id = lesson.id;
+    if (lessonHistory[id] && lesson.command && lessonHistory[id].length >= lesson.command.length) {
+      point += 1;
+    }
+  });
+
+  // Show result dialog when all lessons are done
+  useEffect(() => {
+    if (
+      lessons.length > 0 &&
+      lessons.every(
+        (lesson) =>
+          lessonHistory[lesson.id] && lesson.command && lessonHistory[lesson.id].length >= lesson.command.length
+      )
+    ) {
+      setShowResult(true);
+    }
+  }, [lessons, lessonHistory]);
 
   useEffect(() => {
     setLoading(true);
@@ -75,6 +99,7 @@ function BattleZone() {
     <div className="py-10 gap-10 max-w-7xl mx-auto">
       <BattleStartDialog open={showStart} onStart={handleStart} />
       <BattleCountdown start={showCountdown} onDone={handleCountdownDone} />
+      <BattleResultDialog open={showResult} point={point} onClose={() => setShowResult(false)} />
       <div className="flex-1">
         {!showStart && !showCountdown && (
           <BattleLessonsBody
@@ -88,7 +113,7 @@ function BattleZone() {
           />
         )}
       </div>
-      <BattleSummery />
+      <BattleSummery lessons={lessons} lessonHistory={lessonHistory} typingStats={typingStats} />
     </div>
   );
 }
