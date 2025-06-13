@@ -1,5 +1,3 @@
-import React from "react";
-
 function Lessons({ lessons = [], activeIndex = 3 }) {
   function LessonItem({ lesson, index }) {
     return (
@@ -15,23 +13,15 @@ function Lessons({ lessons = [], activeIndex = 3 }) {
   }
 
   function EmptyLesson() {
-    return (
-      <div className="max-h-72 h-72 bg-zinc-900 grid place-items-center rounded-md">
-        Lesson Seems Empty
-      </div>
-    );
+    return <div className="max-h-72 h-72 bg-zinc-900 grid place-items-center rounded-md">Lesson Seems Empty</div>;
   }
 
   return (
     <div>
-      <h1 className="text-xl mb-4 font-bold text-zinc-300 uppercase">
-        ALL the lessons
-      </h1>
+      <h1 className="text-xl mb-4 font-bold text-zinc-300 uppercase">ALL the lessons</h1>
       <ul className="text-sm space-y-2 text-zinc-600">
         {lessons.length ? (
-          lessons.map((lesson, index) => (
-            <LessonItem lesson={lesson} index={index} />
-          ))
+          lessons.map((lesson, index) => <LessonItem key={index} lesson={lesson} index={index} />)
         ) : (
           <EmptyLesson />
         )}

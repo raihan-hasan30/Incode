@@ -1,6 +1,6 @@
-import TypingArea from "./typing-area";
+import TypingArea from "./battle-typing-area";
 
-function LessonsBody({
+function BattleLessonsBody({
   lesson,
   setActiveIndex,
   lessonHistory,
@@ -9,11 +9,12 @@ function LessonsBody({
   typingStats,
   setTypingStats,
 }) {
+  console.log(lesson);
   return (
     <div>
       <div>
         <h1 className="text-center text-4xl text-white font-bold">{lesson.name}</h1>
-        <h3 className="text-zinc-400 mt-4">{lesson.summery}</h3>
+        <h3 className="text-zinc-400 mt-4 text-center">{lesson.summary}</h3>
         <TypingArea
           key={lesson.id}
           id={lesson.id}
@@ -55,4 +56,4 @@ function LessonsBody({
   );
 }
 
-export default LessonsBody;
+export default BattleLessonsBody;

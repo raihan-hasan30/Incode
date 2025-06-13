@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-function TypingArea({
+function BattleTypingArea({
   command,
   nextCommand,
   isReady,
@@ -33,28 +33,23 @@ function TypingArea({
     const handleKeyDown = (event) => {
       if (event.key === "Tab") {
         event.preventDefault();
-        if (typedText.length >= command.length) {
-          // Save stats on completion
-          setTypingStats((prev) => ({
-            ...prev,
-            [id]: {
-              wrong: wrongCount,
-              chars: typedText.length,
-              time: elapsed + (startTime ? Date.now() - startTime : 0),
-            },
-          }));
-          nextCommand();
-          setTypedText("");
-          setWrongCount(0);
-          setElapsed(0);
-          setStartTime(null);
-        }
+        // Save stats on completion
+        setTypingStats((prev) => ({
+          ...prev,
+          [id]: {
+            wrong: wrongCount,
+            chars: typedText.length,
+            time: elapsed + (startTime ? Date.now() - startTime : 0),
+          },
+        }));
+        nextCommand();
+        setTypedText("");
+        setWrongCount(0);
+        setElapsed(0);
+        setStartTime(null);
       } else if (event.key === "Backspace") {
         setTypedText((prev) => prev.slice(0, -1));
       } else if (event.key.length === 1) {
-        if (typedText.length >= command.length) {
-          return;
-        }
         setTypedText((prev) => {
           // Count wrong char
           const idx = prev.length;
@@ -85,7 +80,7 @@ function TypingArea({
     const typedChars = typedText.split("");
     const elements = [];
     for (let i = 0; i < chars.length; i++) {
-      let className = "text-zinc-700";
+      let className = "text-transparent";
       if (i < typedChars.length) {
         if (typedChars[i] === chars[i]) {
           className = "text-amber-700";
@@ -103,7 +98,7 @@ function TypingArea({
   };
 
   return (
-    <div className="min-h-96 flex items-center justify-center relative ">
+    <div className="min-h-96 max-h-96 flex items-center justify-center relative ">
       <h2 className="text-2xl font-bold">{renderCharacters()}</h2>
       {typedText.length >= command.length && (
         <button
@@ -117,4 +112,4 @@ function TypingArea({
   );
 }
 
-export default TypingArea;
+export default BattleTypingArea;
