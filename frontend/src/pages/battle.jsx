@@ -5,6 +5,7 @@ import BattleSummery from "../components/battle/battle-summery";
 import BattleCountdown from "../components/battle/BattleCountdown";
 import BattleResultDialog from "../components/battle/BattleResultDialog";
 import BattleStartDialog from "../components/battle/BattleStartDialog";
+import { saveBattleResult } from "../repository/battle-result-api";
 import { fetchLessons } from "../repository/lesson-api";
 import { fetchQuests } from "../repository/quest-api";
 
@@ -20,6 +21,7 @@ function BattleZone() {
   const [showStart, setShowStart] = useState(true);
   const [showCountdown, setShowCountdown] = useState(false);
   const [showResult, setShowResult] = useState(false);
+  const [resultSaved, setResultSaved] = useState(false);
 
   const handleStart = () => {
     setShowStart(false);
@@ -31,9 +33,15 @@ function BattleZone() {
   };
 
   // Calculate point (same as BattleSummery)
-  let point = 0;
+  let point = 0,
+    right = 0,
+    wrong = 0;
   lessons.forEach((lesson) => {
     const id = lesson.id;
+    const stats = typingStats[id] || {};
+    const correct = Math.max((stats.chars || 0) - (stats.wrong || 0), 0);
+    right += correct;
+    wrong += stats.wrong || 0;
     if (lessonHistory[id] && lesson.command && lessonHistory[id].length >= lesson.command.length) {
       point += 1;
     }
@@ -51,6 +59,28 @@ function BattleZone() {
       setShowResult(true);
     }
   }, [lessons, lessonHistory]);
+
+  useEffect(() => {
+    if (
+      showResult &&
+      !resultSaved &&
+      lessons.length > 0 &&
+      lessons.every(
+        (lesson) =>
+          lessonHistory[lesson.id] && lesson.command && lessonHistory[lesson.id].length >= lesson.command.length
+      )
+    ) {
+      // Save result to backend
+      saveBattleResult({
+        quest_id: quest?.id,
+        point,
+        right,
+        wrong,
+      })
+        .then(() => setResultSaved(true))
+        .catch(() => setResultSaved(false));
+    }
+  }, [showResult, resultSaved, lessons, lessonHistory, quest, point, right, wrong]);
 
   useEffect(() => {
     setLoading(true);

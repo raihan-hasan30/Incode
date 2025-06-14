@@ -84,5 +84,18 @@ def register():
 
 @auth_routes.route('/logout', methods=['POST'])
 def logout():
-    """Logs a user out"""
-    return {'message': 'User logged out'}
+    """Logs a user out by unsetting JWT cookies."""
+    response = jsonify({'message': 'User logged out'})
+    unset_jwt_cookies(response)
+    return response
+
+
+@auth_routes.route('/me', methods=['GET'])
+@jwt_required()
+def me():
+    """Returns the current logged-in user's info if authenticated."""
+    current_user_email = get_jwt_identity()
+    user = User.query.filter_by(email=current_user_email).first()
+    if not user:
+        return {"errors": ["User not found."]}, 404
+    return {"user": user.to_dict()}, 200

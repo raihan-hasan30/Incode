@@ -1,13 +1,12 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
 import { useNavigate } from "react-router";
-import { setAuth } from "../../redux/auth/authSlice";
+import { useAuth } from "../../context/authContext";
 import loginAPI from "../../repository/login-api";
 
 function LoginForm() {
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -36,8 +35,8 @@ function LoginForm() {
     loginAPI(params)
       .then((respose) => {
         setLoading(false);
-        dispatch(setAuth(respose.user));
-        navigate("/");
+        login(respose.user); // update context for navbar
+        navigate("/quest-list");
       })
       .catch((err) => {
         setLoading(false);

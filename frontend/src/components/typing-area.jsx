@@ -52,6 +52,9 @@ function TypingArea({
       } else if (event.key === "Backspace") {
         setTypedText((prev) => prev.slice(0, -1));
       } else if (event.key.length === 1) {
+        if (typedText.length >= command.length) {
+          return;
+        }
         setTypedText((prev) => {
           // Count wrong char
           const idx = prev.length;

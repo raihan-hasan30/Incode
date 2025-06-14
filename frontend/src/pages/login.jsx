@@ -1,8 +1,38 @@
-import React from "react";
-import { NavLink } from "react-router";
+import { useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router";
 import LoginForm from "../components/forms/login-form";
+import { useAuth } from "../context/authContext";
+import loginAPI from "../repository/login-api";
 
 function Login() {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { user, login: updateAuth } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      navigate("/quest-list", { replace: true });
+    }
+  }, [user, navigate]);
+
+  function login(type) {
+    const params = {
+      email: type === "admin" ? "admin@incode.io" : "user@incode.io",
+      password: "admin@incode.io",
+    };
+
+    loginAPI(params)
+      .then((respose) => {
+        setLoading(false);
+        updateAuth(respose.user);
+        navigate("/quest-list");
+      })
+      .catch((err) => {
+        setLoading(false);
+        alert(err.message);
+      });
+  }
+
   return (
     <div className="max-h-screen min-h-screen h-screen overflow-hidden grid place-items-center">
       <div className="min-w-96">
@@ -32,15 +62,18 @@ function Login() {
           </div>
         </div>
 
-        <div className="mt-6 grid grid-cols-3 gap-3">
-          <button className="bg-zinc-800 p-2 rounded hover:bg-zinc-700 transition-colors">
-            {/* Social icon placeholder */}
+        <div className="mt-6 grid grid-cols-2 gap-3">
+          <button
+            onClick={() => login("admin")}
+            className="bg-zinc-800 p-2 rounded hover:bg-zinc-700 transition-colors text-xs text-white/50"
+          >
+            Login as Admin
           </button>
-          <button className="bg-zinc-800 p-2 rounded hover:bg-zinc-700 transition-colors">
-            {/* Social icon placeholder */}
-          </button>
-          <button className="bg-zinc-800 p-2 rounded hover:bg-zinc-700 transition-colors">
-            {/* Social icon placeholder */}
+          <button
+            onClick={() => login("user")}
+            className="bg-zinc-800 p-2 rounded hover:bg-zinc-700 transition-colors text-xs text-white/50"
+          >
+            Login as User
           </button>
         </div>
       </div>

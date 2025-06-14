@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import CongratulationsDialog from "../components/CongratulationsDialog";
 import Lessons from "../components/lessons";
 import LessonsBody from "../components/lessonsBody";
 import LessonsSummary from "../components/lessonsSummary";
@@ -16,6 +17,7 @@ function AllParctices() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [typingStats, setTypingStats] = useState({});
+  const [showCongrats, setShowCongrats] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -55,6 +57,12 @@ function AllParctices() {
       });
   }, [questId]);
 
+  useEffect(() => {
+    if (lessons.length && activeIndex >= lessons.length) {
+      setShowCongrats(true);
+    }
+  }, [activeIndex, lessons.length]);
+
   if (loading) return <div className="p-8 text-zinc-300 text-center text-lg">Loading quest and lessons...</div>;
   if (error) return <div className="p-8 text-red-500 text-center text-lg">{error}</div>;
   if (!quest || !lessons.length)
@@ -62,19 +70,32 @@ function AllParctices() {
 
   return (
     <div className="flex justify-between py-10 gap-10 max-w-7xl mx-auto">
+      {showCongrats && (
+        <CongratulationsDialog
+          onClose={() => {
+            setShowCongrats(false);
+            setActiveIndex(0);
+          }}
+          typingStats={typingStats}
+          lessonHistory={lessonHistory}
+          lessons={lessons}
+        />
+      )}
       <div className="w-1/4 min-w-[220px]">
         <Lessons lessons={lessons} activeIndex={activeIndex} quest={quest} setActiveIndex={setActiveIndex} />
       </div>
       <div className="flex-1">
-        <LessonsBody
-          lesson={lessons[activeIndex]}
-          setActiveIndex={setActiveIndex}
-          lessonHistory={lessonHistory}
-          setLessonHistory={setLessonHistory}
-          lessons={lessons}
-          typingStats={typingStats}
-          setTypingStats={setTypingStats}
-        />
+        {activeIndex < lessons.length && (
+          <LessonsBody
+            lesson={lessons[activeIndex]}
+            setActiveIndex={setActiveIndex}
+            lessonHistory={lessonHistory}
+            setLessonHistory={setLessonHistory}
+            lessons={lessons}
+            typingStats={typingStats}
+            setTypingStats={setTypingStats}
+          />
+        )}
       </div>
       <div className="w-1/4 min-w-[220px]">
         <LessonsSummary lessons={lessons} lessonHistory={lessonHistory} typingStats={typingStats} quest={quest} />

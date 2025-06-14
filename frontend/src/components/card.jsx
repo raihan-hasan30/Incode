@@ -1,15 +1,10 @@
 import { Link } from "react-router";
 
 function Card({ quest }) {
-  const logoUrl = quest.logo
-    ? quest.logo.startsWith("http")
-      ? quest.logo
-      : `${import.meta.env.VITE_API_URL}/api/quest/logo/${quest.logo}`
-    : null;
   return (
     <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-2xl p-6 w-72 shadow-xl border border-zinc-700 cursor-pointer group transition-all duration-500 hover:-translate-y-1 flex flex-col items-center relative group">
       {/* Logo */}
-      {logoUrl ? (
+      {quest?.logo ? (
         <img
           src={import.meta.env.VITE_API_URL + quest.logo}
           className="w-20 h-20 mb-4 bg-white p-2 rounded-xl  object-contain border-2 border-transparent group-hover:border-amber-600 shadow-lg group-hover:shadow-amber-600/50 transition-all duration-300"

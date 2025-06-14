@@ -1,25 +1,35 @@
 from flask import Blueprint, jsonify
-from flask_login import login_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.models import User
 
 user_routes = Blueprint('users', __name__)
 
 
 @user_routes.route('/')
-@login_required
+@jwt_required()
 def users():
     """
-    Query for all users and returns them in a list of user dictionaries
+    Query for all users with role 'user' and returns them in a list of user dictionaries.
+    Only accessible to admins.
     """
-    users = User.query.all()
+    current_user_email = get_jwt_identity()
+    current_user = User.query.filter_by(email=current_user_email).first()
+    if not current_user or current_user.role != 'admin':
+        return {"errors": ["Admin access required."]}, 403
+    users = User.query.filter_by(role='user').all()
     return {'users': [user.to_dict() for user in users]}
 
 
 @user_routes.route('/<int:id>')
-@login_required
+@jwt_required()
 def user(id):
     """
     Query for a user by id and returns that user in a dictionary
+    Only accessible to admins.
     """
+    current_user_email = get_jwt_identity()
+    current_user = User.query.filter_by(email=current_user_email).first()
+    if not current_user or current_user.role != 'admin':
+        return {"errors": ["Admin access required."]}, 403
     user = User.query.get(id)
-    return user.to_dict()
+    return user.to_dict() if user else {"errors": ["User not found."]}, 404

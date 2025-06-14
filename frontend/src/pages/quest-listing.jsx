@@ -7,9 +7,12 @@ function QuestListing() {
   const [quests, setQuests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [search, setSearch] = useState("");
+  const [filteredQuests, setFilteredQuests] = useState([]);
 
   useEffect(() => {
     setLoading(true);
+
     fetchQuests()
       .then((data) => {
         // Only show published quests
@@ -22,15 +25,25 @@ function QuestListing() {
       });
   }, []);
 
+  useEffect(() => {
+    setFilteredQuests(
+      quests.filter(
+        (q) =>
+          q.questName?.toLowerCase().includes(search.toLowerCase()) ||
+          q.description?.toLowerCase().includes(search.toLowerCase())
+      )
+    );
+  }, [search, quests]);
+
   if (loading) return <div className="p-6 text-zinc-300">Loading quests...</div>;
   if (error) return <div className="p-6 text-red-500">{error}</div>;
-  if (!quests.length) return <div className="p-6 text-zinc-400">No quests available yet.</div>;
+  if (!filteredQuests.length) return <div className="p-6 text-zinc-400">No quests available yet.</div>;
 
   return (
     <>
-      <Searchbar />
+      <Searchbar value={search} onChange={setSearch} />
       <div className="flex gap-4 justify-center flex-wrap">
-        {quests.map((quest) => (
+        {filteredQuests.map((quest) => (
           <Card key={quest.id} quest={quest} />
         ))}
       </div>

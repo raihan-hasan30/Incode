@@ -8,6 +8,7 @@ from .api.user_routes import user_routes
 from .api.auth_routes import auth_routes
 from .api.quest_routes import quest_router
 from .api.lesson_routes import lesson_router
+from .api.battle_result_routes import battle_result_routes
 from .config import Config
 
 # Correct the template folder path to resolve properly
@@ -38,6 +39,7 @@ def create_app():
     app.register_blueprint(auth_routes, url_prefix='/api/auth')
     app.register_blueprint(quest_router, url_prefix='/api/quest')
     app.register_blueprint(lesson_router, url_prefix='/api/lesson')
+    app.register_blueprint(battle_result_routes, url_prefix='/api')
 
     @app.before_request
     def https_redirect():
@@ -49,7 +51,7 @@ def create_app():
 
     @app.route('/')
     def react_root():
-        return 
+        return "Hello"
 
     # Update the 404 error handler to render the index.html template
     @app.errorhandler(404)
