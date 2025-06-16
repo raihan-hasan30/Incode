@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import ReactConfetti from "react-confetti";
 import { useParams } from "react-router-dom";
 import BattleLessonsBody from "../components/battle/battle-lesson-body";
 import BattleSummery from "../components/battle/battle-summery";
@@ -35,17 +36,24 @@ function BattleZone() {
   // Calculate point (same as BattleSummery)
   let point = 0,
     right = 0,
-    wrong = 0;
+    wrong = 0,
+    totalTime = 0;
   lessons.forEach((lesson) => {
     const id = lesson.id;
     const stats = typingStats[id] || {};
     const correct = Math.max((stats.chars || 0) - (stats.wrong || 0), 0);
     right += correct;
     wrong += stats.wrong || 0;
+    totalTime += stats.time || 0;
     if (lessonHistory[id] && lesson.command && lessonHistory[id].length >= lesson.command.length) {
       point += 1;
     }
   });
+  // Calculate WPM (words per minute)
+  // 1 word = 5 chars, time in ms
+  const totalWords = right / 5;
+  const totalMinutes = totalTime / 60000;
+  const wpm = totalMinutes > 0 ? Math.round(totalWords / totalMinutes) : 0;
 
   // Show result dialog when all lessons are done
   useEffect(() => {
@@ -127,11 +135,21 @@ function BattleZone() {
 
   return (
     <div className="py-10 gap-10 max-w-7xl mx-auto">
+      {showResult && (
+        <ReactConfetti width={window.innerWidth} height={window.innerHeight} recycle={false} numberOfPieces={400} />
+      )}
       <BattleStartDialog open={showStart} onStart={handleStart} />
       <BattleCountdown start={showCountdown} onDone={handleCountdownDone} />
-      <BattleResultDialog open={showResult} point={point} onClose={() => setShowResult(false)} />
+      <BattleResultDialog
+        open={showResult}
+        point={point}
+        right={right}
+        wrong={wrong}
+        wpm={wpm}
+        onClose={() => setShowResult(false)}
+      />
       <div className="flex-1">
-        {!showStart && !showCountdown && (
+        {!showStart && !showCountdown && activeIndex < lessons.length && (
           <BattleLessonsBody
             lesson={lessons[activeIndex]}
             setActiveIndex={setActiveIndex}

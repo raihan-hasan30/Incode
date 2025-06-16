@@ -9,7 +9,6 @@ function BattleLessonsBody({
   typingStats,
   setTypingStats,
 }) {
-  console.log(lesson);
   return (
     <div>
       <div>

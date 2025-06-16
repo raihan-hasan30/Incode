@@ -32,7 +32,6 @@ export default function QuestForm() {
     createQuestAPI(formData)
       .then((response) => {
         navigate(`/admin/${response.id}/lesson`);
-        console.log("Quest created successfully:", response);
       })
       .catch((error) => {
         console.error("Error creating quest:", error);

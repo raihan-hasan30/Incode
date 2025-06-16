@@ -9,6 +9,10 @@ body {
   font-optical-sizing: auto;
 }
 
+@view-transition {
+  navigation: auto;
+}
+
 ::selection {
   background-color: #f2ba02a1;
   color: black;
