@@ -3,6 +3,7 @@ from flask import Flask, request, redirect, render_template, send_from_directory
 from flask_cors import CORS
 from flask_login import LoginManager
 from flask_jwt_extended import JWTManager
+from flask_migrate import Migrate
 from .models import db, User
 from .api.user_routes import user_routes
 from .api.auth_routes import auth_routes
@@ -28,12 +29,18 @@ def create_app():
     app.config.from_object(Config)
     db.init_app(app)
 
+    # Print the database URI for debugging
+    print('Connecting to database:', app.config['SQLALCHEMY_DATABASE_URI'])
+
     # Enable CORS with cookies and allow only frontend origin
     CORS(app, supports_credentials=True, origins=["http://localhost:5174"])
 
     # Initialize JWT Manager
     jwt = JWTManager()
     jwt.init_app(app)
+
+    # Initialize Flask-Migrate
+    migrate = Migrate(app, db)
 
     # Register blueprints
     app.register_blueprint(user_routes, url_prefix='/api/users')
