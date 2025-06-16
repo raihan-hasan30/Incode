@@ -12,10 +12,11 @@ from .api.battle_result_routes import battle_result_routes
 from .config import Config
 
 # Correct the template folder path to resolve properly
-template_dir = os.path.join(os.path.dirname(__file__), 'templates')
+frontend_dist = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../frontend/dist'))
+
 
 def create_app():
-    app = Flask(__name__, template_folder=template_dir)
+    app = Flask(__name__, static_folder=frontend_dist, template_folder=frontend_dist)
 
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']
     app.config['JWT_COOKIE_SECURE'] = False  # set to True in production (requires HTTPS)
@@ -49,9 +50,13 @@ def create_app():
                 return redirect(url, code=301)
 
 
-    @app.route('/')
-    def react_root():
-        return "Hello"
+    @app.route('/', defaults={'path': ''})
+    @app.route('/<path:path>')
+    def react_root(path):
+        # Serve static files if they exist, otherwise serve index.html for React Router
+        if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+            return send_from_directory(app.static_folder, path)
+        return send_from_directory(app.static_folder, 'index.html')
 
     # Update the 404 error handler to render the index.html template
     @app.errorhandler(404)
