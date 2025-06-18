@@ -22,7 +22,6 @@ export default function AddLessonForm() {
       .then((response) => {
         if (response) {
           alert("Lesson created successfully!");
-          console.log("Lesson created successfully:", response);
         } else {
           alert("Error creating lesson.");
           console.error("Error creating lesson:", response);

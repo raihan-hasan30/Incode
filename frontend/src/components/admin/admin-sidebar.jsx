@@ -1,4 +1,5 @@
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
+import { useAuth } from "../../context/authContext";
 
 const navItems = [
   {
@@ -27,58 +28,71 @@ const navItems = [
       </svg>
     ),
   },
-
-  {
-    label: "Users",
-    route: "/admin/users",
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
-        <path
-          fillRule="evenodd"
-          d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
-          clipRule="evenodd"
-        />
-      </svg>
-    ),
-  },
-
-  {
-    label: "Log Out",
-    route: "/admin/logout",
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
-        <path
-          fillRule="evenodd"
-          d="M12 2.25a.75.75 0 01.75.75v9a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM6.166 5.106a.75.75 0 010 1.06 8.25 8.25 0 1011.668 0 .75.75 0 111.06-1.06c3.808 3.807 3.808 9.98 0 13.788-3.807 3.808-9.98 3.808-13.788 0-3.808-3.807-3.808-9.98 0-13.788a.75.75 0 011.06 0z"
-          clipRule="evenodd"
-        />
-      </svg>
-    ),
-  },
 ];
 
 function AdminSidebar() {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
+
+  const handleBack = () => {
+    navigate("/");
+  };
+
   return (
     <aside className="h-screen min-h-screen bg-zinc-900 border-r border-zinc-800 flex flex-col w-20 md:w-64 p-6 fixed left-0 top-0 transition-all">
       <div className="mb-8 flex flex-col items-center">
         <span className="text-lg md:text-2xl font-bold text-amber-500 tracking-wide hidden md:block">Admin Panel</span>
       </div>
-      <nav className="flex flex-col ">
-        {navItems.map((item, idx) => (
+      <nav className="flex-1 flex flex-col gap-2">
+        <button
+          onClick={handleBack}
+          className="flex items-center gap-3 px-4 py-2 rounded-lg text-zinc-200 hover:bg-zinc-800 transition-colors mt-4"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="h-5 w-5"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+          <span className="hidden md:inline">Back</span>
+        </button>
+        {navItems.map((item) => (
           <NavLink
+            key={item.route}
             to={item.route}
-            key={item.label}
             className={({ isActive }) =>
-              `flex items-center gap-4 p-2 rounded-lg transition-colors duration-200 ${
-                isActive ? "bg-zinc-800 text-amber-500" : "text-zinc-400 hover:bg-zinc-700 hover:text-amber-500"
+              `flex items-center gap-3 px-4 py-2 rounded-lg text-zinc-200 hover:bg-zinc-800 transition-colors ${
+                isActive ? "bg-zinc-800 text-amber-400 font-bold" : ""
               }`
             }
-            end={idx === navItems.length - 1}
           >
-            <span className="text-amber-500">{item.icon}</span>
-            <span className="flex-1 text-left text-sm hidden md:block">{item.label}</span>
+            {item.icon}
+            <span className="hidden md:inline">{item.label}</span>
           </NavLink>
         ))}
+
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-4 py-2 rounded-lg text-red-400 hover:bg-red-600 hover:text-white transition-colors mt-2"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+            <path
+              fillRule="evenodd"
+              d="M12 2.25a.75.75 0 01.75.75v9a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM6.166 5.106a.75.75 0 010 1.06 8.25 8.25 0 1011.668 0 .75.75 0 111.06-1.06c3.808 3.807 3.808 9.98 0 13.788-3.807 3.808-9.98 3.808-13.788 0-3.808-3.807-3.808-9.98 0-13.788a.75.75 0 011.06 0z"
+              clipRule="evenodd"
+            />
+          </svg>
+          <span className="hidden md:inline">Logout</span>
+        </button>
       </nav>
     </aside>
   );

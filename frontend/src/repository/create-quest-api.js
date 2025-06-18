@@ -2,7 +2,7 @@ export default async function createQuestAPI(params) {
   try {
     // params should be a FormData object
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/quest/create`,
+      `/api/quest/create`,
       {
         method: "POST",
         body: params, // FormData

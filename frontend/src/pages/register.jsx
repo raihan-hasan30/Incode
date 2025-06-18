@@ -1,8 +1,18 @@
-import React from "react";
-import { NavLink } from "react-router";
+import { useEffect } from "react";
+import { NavLink, useNavigate } from "react-router";
 import RegisterForm from "../components/forms/register-form";
+import { useAuth } from "../context/authContext";
 
 function Register() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate("/quest-list", { replace: true });
+    }
+  }, [user, navigate]);
+
   return (
     <div className="max-h-screen min-h-screen h-screen overflow-hidden grid place-items-center">
       <div className="min-w-96">

@@ -89,7 +89,6 @@ export default function CreateQuest() {
     };
 
     // Log the data (in a real app, this would be sent to a database)
-    console.log("Quest Data:", finalQuest);
   };
 
   return (

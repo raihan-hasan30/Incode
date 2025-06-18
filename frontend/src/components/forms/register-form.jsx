@@ -1,13 +1,10 @@
 import { LoaderCircle } from "lucide-react";
 import React from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
-import { setAuth } from "../../redux/auth/authSlice";
 import registerAPI from "../../repository/register-api";
 
 function RegisterForm() {
   const [loading, setLoading] = React.useState(false);
-  const dispatch = useDispatch();
   let navigate = useNavigate();
 
   function handleFormSubmit(event) {
@@ -75,7 +72,6 @@ function RegisterForm() {
     registerAPI(params)
       .then((respose) => {
         setLoading(false);
-        dispatch(setAuth(respose.user));
         navigate("/");
       })
       .catch((err) => {
