@@ -30,7 +30,7 @@ This guide explains how to populate your database with an initial admin user for
 2. **Run the seed script:**
 
    ```sh
-   python -m app.seed.user_seed
+   pipenv run python -m app.seed.user_seed
    ```
 
    - You should see `Admin user created.` or `Admin user already exists.`
