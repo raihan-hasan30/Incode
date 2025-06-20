@@ -4,7 +4,6 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 lesson_router = Blueprint('lesson', __name__)
 
-# Create lesson for a quest
 @lesson_router.route('/<quest_id>/create', methods=['POST'])
 def create_lesson(quest_id):
     try:
@@ -25,7 +24,6 @@ def create_lesson(quest_id):
     except Exception as e:
         return jsonify({"errors": ["Server error. Please try again.", str(e)]}), 500
 
-# Get all lessons for a quest
 @lesson_router.route('/<quest_id>', methods=['GET'])
 def get_lessons_for_quest(quest_id):
     try:
@@ -37,7 +35,6 @@ def get_lessons_for_quest(quest_id):
     except Exception as e:
         return jsonify({"errors": ["Server error. Please try again.", str(e)]}), 500
 
-# Get a single lesson by id
 @lesson_router.route('/<quest_id>/<lesson_id>', methods=['GET'])
 def get_lesson(quest_id, lesson_id):
     try:
@@ -48,7 +45,6 @@ def get_lesson(quest_id, lesson_id):
     except Exception as e:
         return jsonify({"errors": ["Server error. Please try again.", str(e)]}), 500
 
-# Update a lesson
 @lesson_router.route('/<quest_id>/<lesson_id>', methods=['PUT'])
 def update_lesson(quest_id, lesson_id):
     try:
@@ -70,7 +66,6 @@ def update_lesson(quest_id, lesson_id):
     except Exception as e:
         return jsonify({"errors": ["Server error. Please try again.", str(e)]}), 500
 
-# Delete a lesson
 @lesson_router.route('/<quest_id>/<lesson_id>', methods=['DELETE'])
 def delete_lesson(quest_id, lesson_id):
     try:

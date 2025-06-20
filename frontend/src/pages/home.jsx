@@ -1,9 +1,26 @@
 import { CheckCircle, ChevronDown, Gift, Globe, Heart, Terminal } from "lucide-react";
 
 export default function Home() {
+  const faqs = [
+    {
+      q: "Is Incode free to use?",
+      a: "Yes! You can start practicing for free. Some advanced features may require an account.",
+    },
+    {
+      q: "What topics can I practice?",
+      a: "You can practice Docker, Git, Bash, and more. We’re adding new topics regularly.",
+    },
+    {
+      q: "How does Incode help me learn?",
+      a: "By typing real commands and code, you build muscle memory and confidence—much faster than passive reading.",
+    },
+    {
+      q: "Can I track my progress?",
+      a: "Yes! You’ll see your XP, badges, streaks, and detailed session stats.",
+    },
+  ];
   return (
     <div>
-      {/* Hero Section */}
       <section className="px-4 pt-8 pb-12 mx-auto">
         <div className="text-center sm:text-left">
           <p className="text-amber-400 mb-2 font-semibold tracking-wide">Practice. Type. Master.</p>
@@ -56,7 +73,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Who is it for? */}
       <section className="px-4 py-12 max-w-5xl mx-auto">
         <h2 className="text-2xl font-bold mb-6 text-white text-center">Who is Incode for?</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -91,7 +107,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features */}
       <section className="px-4 py-12 max-w-5xl mx-auto">
         <h2 className="text-2xl font-bold mb-6 text-white text-center">Core Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -130,7 +145,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why Incode? */}
       <section className="px-4 py-12 max-w-5xl mx-auto">
         <h2 className="text-2xl font-bold mb-6 text-white text-center">Why Incode?</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -165,28 +179,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FAQ */}
       <section className="px-4 py-12 max-w-5xl mx-auto">
         <h2 className="text-2xl font-bold mb-6 text-white text-center">Frequently Asked Questions</h2>
         <div className="space-y-4">
-          {[
-            {
-              q: "Is Incode free to use?",
-              a: "Yes! You can start practicing for free. Some advanced features may require an account.",
-            },
-            {
-              q: "What topics can I practice?",
-              a: "You can practice Docker, Git, Bash, and more. We’re adding new topics regularly.",
-            },
-            {
-              q: "How does Incode help me learn?",
-              a: "By typing real commands and code, you build muscle memory and confidence—much faster than passive reading.",
-            },
-            {
-              q: "Can I track my progress?",
-              a: "Yes! You’ll see your XP, badges, streaks, and detailed session stats.",
-            },
-          ].map((item, i) => (
+          {faqs.map((item, i) => (
             <div key={i} className="bg-zinc-900 rounded-lg p-4">
               <button className="flex justify-between items-center w-full text-left text-white">
                 <span>{item.q}</span>

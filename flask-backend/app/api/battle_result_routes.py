@@ -16,7 +16,6 @@ def create_battle_result():
     if not quest_id or point is None or right is None or wrong is None:
         return jsonify({'error': 'Missing required fields'}), 400
 
-    # Optionally, check if quest exists
     quest = Quest.query.get(quest_id)
     if not quest:
         return jsonify({'error': 'Quest not found'}), 404

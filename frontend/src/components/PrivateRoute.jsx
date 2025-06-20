@@ -1,4 +1,4 @@
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../context/authContext";
 
 function PrivateRoute({ children }) {
@@ -7,7 +7,12 @@ function PrivateRoute({ children }) {
 
   if (loading) return null; // or a spinner
   if (!user) return <Navigate to="/login" state={{ from: location }} replace />;
-  return children;
+  return (
+    <>
+      {children}
+      <Outlet />
+    </>
+  );
 }
 
 export default PrivateRoute;

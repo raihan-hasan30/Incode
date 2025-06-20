@@ -1,20 +1,20 @@
 import { Link } from "react-router";
 
 function Card({ quest }) {
+  const questLogo = quest?.logo ? (
+    <img
+      src={import.meta.env.VITE_API_URL + quest.logo}
+      className="w-20 h-20 mb-4 bg-white p-2 rounded-xl  object-contain border-2 border-transparent group-hover:border-amber-600 shadow-lg group-hover:shadow-amber-600/50 transition-all duration-300"
+      alt={quest?.questName || "Something went wrong"}
+    />
+  ) : (
+    <div className="w-20 h-20 mb-4 bg-zinc-700 rounded-xl flex items-center justify-center text-zinc-400 text-base border-2 border-zinc-600">
+      No Logo
+    </div>
+  );
   return (
     <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-2xl p-6 w-72 shadow-xl border border-zinc-700 cursor-pointer group transition-all duration-500 hover:-translate-y-1 flex flex-col items-center relative group">
-      {/* Logo */}
-      {quest?.logo ? (
-        <img
-          src={import.meta.env.VITE_API_URL + quest.logo}
-          className="w-20 h-20 mb-4 bg-white p-2 rounded-xl  object-contain border-2 border-transparent group-hover:border-amber-600 shadow-lg group-hover:shadow-amber-600/50 transition-all duration-300"
-          alt={quest.questName}
-        />
-      ) : (
-        <div className="w-20 h-20 mb-4 bg-zinc-700 rounded-xl flex items-center justify-center text-zinc-400 text-base border-2 border-zinc-600">
-          No Logo
-        </div>
-      )}
+      {questLogo}
       {/* Quest Name */}
       <h2 className="text-white text-2xl font-extrabold mb-2 text-center tracking-tight group-hover:text-amber-600 transition-colors">
         {quest.questName}

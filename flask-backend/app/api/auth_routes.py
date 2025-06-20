@@ -8,11 +8,10 @@ auth_routes = Blueprint('auth', __name__)
 
 @auth_routes.route('/login', methods=['POST'])
 def login():
-    """Logs a user in"""
     try:
         data = request.get_json();
 
-        # @todo : form Validation
+        # need to validate form
         email = data.get('email')
         password = data.get('password')
 
@@ -40,9 +39,9 @@ def register():
         firstName = data.get('firstName')
         lastName = data.get('lastName')
 
-        # Check if user exists with same email
         user = User.query.filter(User.email == email).first()
-        # If user exists, return error
+        
+        
         if user:
             return {"errors": ["User with this email already exists."]}, 400
         
@@ -84,7 +83,6 @@ def register():
 
 @auth_routes.route('/logout', methods=['POST'])
 def logout():
-    """Logs a user out by unsetting JWT cookies."""
     response = jsonify({'message': 'User logged out'})
     unset_jwt_cookies(response)
     return response
@@ -93,7 +91,6 @@ def logout():
 @auth_routes.route('/me', methods=['GET'])
 @jwt_required()
 def me():
-    """Returns the current logged-in user's info if authenticated."""
     current_user_email = get_jwt_identity()
     user = User.query.filter_by(email=current_user_email).first()
     if not user:

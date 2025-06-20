@@ -1,5 +1,4 @@
 import { Route, Routes } from "react-router";
-import AdminRoute from "./components/AdminRoute";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminLayout from "./layouts/admin-layout";
 import RootLayout from "./layouts/layout";
@@ -22,32 +21,13 @@ function App() {
       <Route element={<RootLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/quest-list" element={<QuestListing />} />
-        <Route
-          path="/practice/:questId"
-          element={
-            <PrivateRoute>
-              <AllParctices />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/battle/:questId"
-          element={
-            <PrivateRoute>
-              <BattleZone />
-            </PrivateRoute>
-          }
-        />
+        <Route element={<PrivateRoute />}>
+          <Route path="/practice/:questId" element={<AllParctices />} />
+          <Route path="/battle/:questId" element={<BattleZone />} />
+        </Route>
       </Route>
 
-      <Route
-        path="admin"
-        element={
-          <AdminRoute>
-            <AdminLayout />
-          </AdminRoute>
-        }
-      >
+      <Route path="admin" element={<AdminLayout />}>
         <Route index element={<AdminHome />} />
         <Route path="quest" element={<AdminQuestList />} />
         <Route path="lesson" element={<AdminLessonList />} />

@@ -1,5 +1,6 @@
 import os
 from flask import Flask, request, redirect, render_template, send_from_directory
+from flask_cors import CORS
 from flask_migrate import Migrate
 from .models import db, User
 from .api.user_routes import user_routes
@@ -8,8 +9,9 @@ from .api.quest_routes import quest_router
 from .api.lesson_routes import lesson_router
 from .api.battle_result_routes import battle_result_routes
 from .config import Config
+from flask_jwt_extended import JWTManager
 
-# Correct the template folder path to resolve properly
+# frontend file path
 frontend_dist = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../frontend/dist'))
 
 
@@ -26,18 +28,14 @@ def create_app():
     app.config.from_object(Config)
     db.init_app(app)
 
-    # Print the database URI for debugging
     print('Connecting to database:', app.config['SQLALCHEMY_DATABASE_URI'])
 
-    # Enable CORS with cookies and allow only frontend origin
     CORS(app, supports_credentials=True, origins=["http://localhost:5174"])
 
-    # Initialize JWT Manager
     jwt = JWTManager()
     jwt.init_app(app)
 
-    # Initialize Flask-Migrate
-    migrate = Migrate(app, db)
+    Migrate(app, db)
 
     # Register blueprints
     app.register_blueprint(user_routes, url_prefix='/api/users')
@@ -46,23 +44,14 @@ def create_app():
     app.register_blueprint(lesson_router, url_prefix='/api/lesson')
     app.register_blueprint(battle_result_routes, url_prefix='/api')
 
-    @app.before_request
-    def https_redirect():
-        if os.environ.get('FLASK_ENV') == 'production':
-            if request.headers.get('X-Forwarded-Proto') == 'http':
-                url = request.url.replace('http://', 'https://', 1)
-                return redirect(url, code=301)
-
 
     @app.route('/', defaults={'path': ''})
     @app.route('/<path:path>')
-    def react_root(path):
-        # Serve static files if they exist, otherwise serve index.html for React Router
+    def homePage(path):
         if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
             return send_from_directory(app.static_folder, path)
         return send_from_directory(app.static_folder, 'index.html')
 
-    # Update the 404 error handler to render the index.html template
     @app.errorhandler(404)
     def not_found(e):
         return render_template('index.html')
