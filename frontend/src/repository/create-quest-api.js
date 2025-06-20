@@ -1,13 +1,11 @@
 export default async function createQuestAPI(params) {
   try {
-    // params should be a FormData object
     const response = await fetch(
       `/api/quest/create`,
       {
         method: "POST",
-        body: params, // FormData
-        // Do not set Content-Type header; browser will set it automatically
-        // credentials: "include"
+        body: params, 
+        credentials: "include"
       }
     )
 

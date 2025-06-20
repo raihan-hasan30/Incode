@@ -37,7 +37,7 @@ function QuestListing() {
 
   if (loading) return <div className="p-6 text-zinc-300">Loading quests...</div>;
   if (error) return <div className="p-6 text-red-500">{error}</div>;
-  if (!filteredQuests.length) return <div className="p-6 text-zinc-400">No quests available yet.</div>;
+  if (!filteredQuests.length && search == "") return <div className="p-6 text-zinc-400">No quests available yet.</div>;
 
   return (
     <>
@@ -46,6 +46,11 @@ function QuestListing() {
         {filteredQuests.map((quest) => (
           <Card key={quest.id} quest={quest} />
         ))}
+        {search !== "" && !filteredQuests.length && (
+          <div className="bg-zinc-800/50 p-8 text-center text-red-600">
+            <p>Nothing found with your Query ({search})</p>
+          </div>
+        )}
       </div>
     </>
   );

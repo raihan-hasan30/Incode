@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify
 from app.models import User, db
-import traceback
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, set_access_cookies, unset_jwt_cookies
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -33,7 +32,6 @@ def register():
     try:
         data = request.get_json()
 
-        # @data validation needed
         email = data.get('email')
         password = data.get('password')
         firstName = data.get('firstName')
@@ -64,18 +62,6 @@ def register():
         set_access_cookies(response, access_token)
         return response
     
-    except KeyError as e:
-        print("KeyError in register: ", e)
-        return {"errors": [str(e)]}, 400
-    
-    except TypeError as e:
-        print("TypeError in register: ", e)
-        return {"errors": [str(e)]}, 400
-    
-    except ValueError as e:
-        print("ValueError in register: ", e)
-        return {"errors": [str(e)]}, 400
-
     except Exception as e:
         print("Error in register: ", e)
         return {"errors": [str(e)]}, 500

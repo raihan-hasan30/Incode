@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
+import validateUser from "../repository/validate-user";
 
 const AuthContext = createContext();
 
@@ -12,18 +13,16 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Try to fetch user info from backend (if JWT cookie exists)
-    async function fetchUser() {
-      try {
-        const res = await axios.get("/api/auth/me");
-        setUser(res.data.user);
-      } catch (err) {
+    validateUser()
+      .then((data) => {
+        setUser(data);
+      })
+      .catch((err) => {
         setUser(null);
-      } finally {
+      })
+      .finally(() => {
         setLoading(false);
-      }
-    }
-    fetchUser();
+      });
   }, []);
 
   const login = (userData) => {
