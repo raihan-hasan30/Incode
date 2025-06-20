@@ -1,4 +1,4 @@
-import { CheckCircle, ChevronDown, Gift, Globe, Heart, Terminal } from "lucide-react";
+import { CheckCircle, Gift, Globe, Heart, Terminal } from "lucide-react";
 
 export default function Home() {
   const faqs = [
@@ -184,10 +184,9 @@ export default function Home() {
         <div className="space-y-4">
           {faqs.map((item, i) => (
             <div key={i} className="bg-zinc-900 rounded-lg p-4">
-              <button className="flex justify-between items-center w-full text-left text-white">
+              <p className="flex justify-between items-center w-full text-left text-white">
                 <span>{item.q}</span>
-                <ChevronDown size={20} />
-              </button>
+              </p>
               <div className="text-zinc-400 text-sm mt-2">{item.a}</div>
             </div>
           ))}
@@ -199,11 +198,9 @@ export default function Home() {
         <div className="max-w-5xl mx-auto flex justify-between items-center">
           <div className="text-sm text-zinc-400">&copy; {new Date().getFullYear()} Incode</div>
           <div className="text-sm text-zinc-400 flex gap-4">
-            <a href="/terms" className="hover:text-amber-400">
-              Terms of Use
-            </a>
-            <a href="/privacy" className="hover:text-amber-400">
-              Privacy Policy
+            Build with ❤️ by{" "}
+            <a className="hover:text-amber-500" href="https://github.com/raihan-hasan30">
+              Raihan Hasan
             </a>
           </div>
         </div>

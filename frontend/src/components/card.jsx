@@ -29,10 +29,6 @@ function Card({ quest }) {
           <span className="text-amber-400 text-lg font-bold">{quest.lessonsCount ?? 0}</span>
           <span className="text-xs text-zinc-400 mt-1">Lessons</span>
         </div>
-        <div className="flex flex-col items-center">
-          <span className="text-amber-400 text-lg font-bold">{quest.challenges ?? 0}</span>
-          <span className="text-xs text-zinc-400 mt-1">Challenges</span>
-        </div>
       </div>
       {/* Actions */}
       <div className="flex justify-between w-full mt-auto pt-4 border-t border-zinc-700 gap-2">

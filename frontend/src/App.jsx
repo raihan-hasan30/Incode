@@ -5,9 +5,6 @@ import RootLayout from "./layouts/layout";
 import AdminHome from "./pages/admin-dashboard/admin-home";
 import AdminLessonList from "./pages/admin-dashboard/admin-lesson";
 import AdminQuestList from "./pages/admin-dashboard/admin-quest-list";
-import Users from "./pages/admin-dashboard/admin-user";
-import CreateLesson from "./pages/admin-dashboard/create-lesson";
-import CreateQuest from "./pages/admin-dashboard/create-quest";
 import BattleZone from "./pages/battle";
 import Home from "./pages/home";
 import Login from "./pages/login";
@@ -31,9 +28,6 @@ function App() {
         <Route index element={<AdminHome />} />
         <Route path="quest" element={<AdminQuestList />} />
         <Route path="lesson" element={<AdminLessonList />} />
-        <Route path="users" element={<Users />} />
-        <Route path="create-quest" element={<CreateQuest />} />
-        <Route path=":questId/lesson" element={<CreateLesson />} />
       </Route>
 
       <Route path="/login" element={<Login />} />

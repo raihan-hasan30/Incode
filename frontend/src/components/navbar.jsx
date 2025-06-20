@@ -8,7 +8,7 @@ function Navbar() {
   return (
     <>
       <div className="flex justify-between py-4 mb-5">
-        <NavLink to={"/"} className="flex items-center" style={({ isActive }) => ({ opacity: isActive ? 1 : 0.7 })}>
+        <NavLink to={"/"} className="flex items-center">
           <img src="/logo.svg" alt="incode" className="h-8" />
         </NavLink>
 

@@ -5,7 +5,7 @@ function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
   const location = useLocation();
 
-  if (loading) return null; // or a spinner
+  if (loading) return null;
   if (!user) return <Navigate to="/login" state={{ from: location }} replace />;
   return (
     <>
