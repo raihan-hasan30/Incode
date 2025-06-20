@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import Confetti from "react-confetti";
 import { useNavigate } from "react-router-dom";
+import CloseDialogButton from "./buttons/CloseDialogButton";
 
 function CongratulationsDialog({ onClose, typingStats, lessonHistory, lessons }) {
   const navigate = useNavigate();
@@ -44,21 +45,7 @@ function CongratulationsDialog({ onClose, typingStats, lessonHistory, lessons })
       <Confetti width={window.innerWidth} height={window.innerHeight} numberOfPieces={250} recycle={false} />
       <div className="relative bg-zinc-900 border border-zinc-700 shadow-2xl rounded-2xl px-8 py-10 w-full max-w-lg text-center animate-fade-in">
         <div className="absolute top-4 right-4">
-          <button
-            onClick={handleClose}
-            className="p-2 rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-amber-400 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-600"
-            aria-label="Close"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+          <CloseDialogButton />
         </div>
         <h2 className="text-4xl font-extrabold text-amber-400 mb-2 drop-shadow">Congratulations! 🎉</h2>
         <p className="mb-8 text-zinc-300 text-lg">You have completed all lessons in this quest.</p>

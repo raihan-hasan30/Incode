@@ -7,11 +7,11 @@ export default function BattleSummery({ lessons = [], lessonHistory = {}, typing
   lessons.forEach((lesson) => {
     const id = lesson.id;
     const stats = typingStats[id] || {};
-    // Right: correct chars (total chars - wrong chars, but not less than 0)
+    // Right
     const correct = Math.max((stats.chars || 0) - (stats.wrong || 0), 0);
     right += correct;
     wrong += stats.wrong || 0;
-    // Point: 1 per completed lesson (typed length >= command length)
+    // Point
     if (lessonHistory[id] && lesson.command && lessonHistory[id].length >= lesson.command.length) {
       point += 1;
     }

@@ -19,10 +19,10 @@ def create_app():
     app = Flask(__name__, static_folder=frontend_dist, template_folder=frontend_dist)
 
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']
-    app.config['JWT_COOKIE_SECURE'] = False  # set to True in production (requires HTTPS)
+    app.config['JWT_COOKIE_SECURE'] = False  
     app.config['JWT_ACCESS_COOKIE_PATH'] = '/'
     app.config['JWT_COOKIE_CSRF_PROTECT'] = True
-    app.config['JWT_COOKIE_SAMESITE'] = 'Lax'  # Use Lax for local dev, None for production
+    app.config['JWT_COOKIE_SAMESITE'] = 'Lax' 
 
     # Config
     app.config.from_object(Config)

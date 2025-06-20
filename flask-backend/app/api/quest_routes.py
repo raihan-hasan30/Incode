@@ -11,13 +11,11 @@ quest_router = Blueprint('quest', __name__)
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static', 'quest_logos')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# Helper to build logo URL
 def get_logo_url(filename):
     if not filename:
         return None
     return f"/api/quest/logo/{filename}"
 
-# List quests (all or only published)
 @quest_router.route('/', methods=['GET'])
 def get_quest_list():
     try:
@@ -32,7 +30,6 @@ def get_quest_list():
     except Exception as e:
         return jsonify({"errors": ["Server error. Please try again.", str(e)]}), 500
 
-# Get a single quest by ID
 @quest_router.route('/<quest_id>', methods=['GET'])
 def get_quest(quest_id):
     try:
@@ -46,7 +43,6 @@ def get_quest(quest_id):
     except Exception as e:
         return jsonify({"errors": ["Server error. Please try again.", str(e)]}), 500
 
-# Create a new quest (with image upload)
 @quest_router.route('/create', methods=['POST'])
 def create_quest():
     try:
@@ -83,7 +79,6 @@ def create_quest():
     except Exception as e:
         return jsonify({"errors": ["Server error. Please try again.", str(e)]}), 500
 
-# Update quest (with optional image upload)
 @quest_router.route('/<quest_id>', methods=['PUT'])
 def update_quest(quest_id):
     try:
@@ -121,7 +116,6 @@ def update_quest(quest_id):
     except Exception as e:
         return jsonify({"errors": ["Server error. Please try again.", str(e)]}), 500
 
-# Delete quest
 @quest_router.route('/<quest_id>', methods=['DELETE'])
 def delete_quest(quest_id):
     try:
@@ -139,7 +133,6 @@ def delete_quest(quest_id):
     except Exception as e:
         return jsonify({"errors": ["Server error. Please try again.", str(e)]}), 500
 
-# Toggle publish status
 @quest_router.route('/<quest_id>/publish', methods=['PATCH'])
 def toggle_publish_quest(quest_id):
     try:
@@ -163,11 +156,9 @@ def serve_logo(filename):
     except Exception as e:
         return jsonify({"errors": ["Image not found."]}), 404
 
-# Create a lesson for a quest
 @quest_router.route('/<quest_id>/lesson', methods=['POST'])
 def create_lesson(quest_id):
     try:
-        # Get the lesson details from the request body
         data = request.get_json()
         lesson_name = data.get('name')
         summary = data.get('summary')
@@ -176,7 +167,6 @@ def create_lesson(quest_id):
         if not lesson_name:
             return jsonify({"errors": ["Lesson name is required."]}), 400
 
-        # Check if the quest exists
         quest = Quest.query.get(quest_id)
         if not quest:
             return jsonify({"errors": ["Quest not found."]}), 404

@@ -56,6 +56,7 @@ function LoginForm() {
         <input
           className="w-full bg-zinc-800 text-gray-300 p-3 rounded outline-none border-none transition-all focus:ring-2 focus:ring-yellow-500"
           name="password"
+          type="password"
           autoComplete="off"
           placeholder="write your password"
         />

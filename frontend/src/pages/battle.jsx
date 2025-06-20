@@ -49,7 +49,6 @@ function BattleZone() {
       point += 1;
     }
   });
-  // Calculate WPM (words per minute)
   // 1 word = 5 chars, time in ms
   const totalWords = right / 5;
   const totalMinutes = totalTime / 60000;

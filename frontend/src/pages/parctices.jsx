@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import CongratulationsDialog from "../components/CongratulationsDialog";
 import Lessons from "../components/lessons";
 import LessonsBody from "../components/lessonsBody";
@@ -9,7 +9,6 @@ import { fetchQuests } from "../repository/quest-api";
 
 function AllParctices() {
   const { questId } = useParams();
-  const navigate = useNavigate();
   const [quest, setQuest] = useState(null);
   const [lessons, setLessons] = useState([]);
   const [lessonHistory, setLessonHistory] = useState({});
@@ -23,7 +22,6 @@ function AllParctices() {
     setLoading(true);
     fetchQuests()
       .then(async (quests) => {
-        // Only published quests
         const published = quests.filter((q) => q.published);
         if (!published.length) {
           setError("No published quests available.");

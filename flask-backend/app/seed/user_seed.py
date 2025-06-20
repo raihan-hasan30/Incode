@@ -2,10 +2,6 @@ from app.models import db, User
 from sqlalchemy.exc import IntegrityError
 
 def seed_admin_user():
-    """
-    Seed an admin user. Will not duplicate if email already exists.
-    Compatible with both SQLite and PostgreSQL.
-    """
     users = [
          User(
                 firstName="Admin",

@@ -3,13 +3,11 @@ from app import app
 
 def seed_lessons():
     with app.app_context():
-        # Only Drop Lessons if they exist
         if db.engine.dialect.has_table(db.engine, 'lessons'):
             db.session.execute(f'TRUNCATE TABLE {Lesson.__tablename__} RESTART IDENTITY CASCADE;')
         else:
             db.create_all()
 
-        # Docker Lessons with quest_id="vite_c0810195-dc36-4000-be18-4cd22f1b8a26"
         docker_lessons = [
             Lesson(quest_id="vite_c0810195-dc36-4000-be18-4cd22f1b8a26", name="Build Docker Image", summary="Builds an image from a Dockerfile.", command="docker build -t my-app ."),
             Lesson(quest_id="vite_c0810195-dc36-4000-be18-4cd22f1b8a26", name="Run Docker Container", summary="Runs a container from an image.", command="docker run -d -p 3000:3000 my-app"),
