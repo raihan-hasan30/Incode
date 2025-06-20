@@ -1,8 +1,5 @@
 import os
 from flask import Flask, request, redirect, render_template, send_from_directory
-from flask_cors import CORS
-from flask_login import LoginManager
-from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from .models import db, User
 from .api.user_routes import user_routes
